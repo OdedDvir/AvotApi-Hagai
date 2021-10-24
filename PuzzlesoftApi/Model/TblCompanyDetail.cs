@@ -1,0 +1,126 @@
+﻿using System;
+using System.Collections.Generic;
+
+#nullable disable
+
+namespace PuzzlesoftApi.Model
+{
+    public partial class TblCompanyDetail
+    {
+        public short? Id { get; set; }
+        public string CompanyName { get; set; }
+        public DateTime? DateCreate { get; set; }
+        public int? OsekId { get; set; }
+        public string Phone2 { get; set; }
+        public string Phone { get; set; }
+        public string Fax { get; set; }
+        public string Email { get; set; }
+        public float? PerMaham { get; set; }
+        public float? PerHachnasa { get; set; }
+        public float? PerMikdamot { get; set; }
+        public string TikNikuyim { get; set; }
+        public string TikHachnasa { get; set; }
+        public string PakidShuma { get; set; }
+        public string CompanyAddress { get; set; }
+        public string AdminPassword { get; set; }
+        public int? MahamHeshId { get; set; }
+        public int? HeshId1 { get; set; }
+        public int? HeshId2 { get; set; }
+        public int? HeshId3 { get; set; }
+        public int? FirstNum1 { get; set; }
+        public int? FirstNum2 { get; set; }
+        public int? FirstNum3 { get; set; }
+        public int? CurrentNum1 { get; set; }
+        public int? CurrentNum2 { get; set; }
+        public int? CurrentNum3 { get; set; }
+        public short? HanpakaDays { get; set; }
+        public bool? ActionReminder { get; set; }
+        public bool? NoMaham0 { get; set; }
+        public bool? NoMaham1 { get; set; }
+        public bool? NoMaham2 { get; set; }
+        public short? DocDir { get; set; }
+        public short? DocFile { get; set; }
+        public bool? IsSingle { get; set; }
+        public string KodMosad { get; set; }
+        public int? KodMasav { get; set; }
+        public short? DayChargeMasav { get; set; }
+        public bool? MosadPrati { get; set; }
+        public short? MitotTeken { get; set; }
+        public float? PerNikuyMakor { get; set; }
+        public short? OptConstCharges { get; set; }
+        public DateTime? DateMasav { get; set; }
+        public DateTime? DateCharge { get; set; }
+        public int? HeshInMaham { get; set; }
+        public int? HeshInNoMaham { get; set; }
+        public int? HeshOut { get; set; }
+        public int? HeshMezuman1 { get; set; }
+        public int? HeshMezuman2 { get; set; }
+        public int? HeshCheck1 { get; set; }
+        public int? HeshCheck2 { get; set; }
+        public decimal? TblcompanydetailsBeriutHanefeshDayPrice { get; set; }
+        public string Tahzuka { get; set; }
+        public string HeshBankMasav { get; set; }
+        public int? MainCoin { get; set; }
+        public decimal? MeterPrice { get; set; }
+        public short? RoomDefId { get; set; }
+        public string TahzukaWorkerKindId { get; set; }
+        public string SmsUser { get; set; }
+        public string SmsPass { get; set; }
+        public bool? BOrientation { get; set; }
+        public byte? RoomPriceByStatus { get; set; }
+        public string EnvelopeSender { get; set; }
+        public bool? BHalfTab { get; set; }
+        public bool? BMakeTnuot { get; set; }
+        public int? HeshMahamMain { get; set; }
+        public int? HeshMabarId { get; set; }
+        public decimal? TblcompanydetailsMabarDayPrice { get; set; }
+        public int? HeshHanefeshId { get; set; }
+        public short? DayToCharge { get; set; }
+        public decimal? MabarDayPrice { get; set; }
+        public decimal? BeriutHanefeshDayPrice { get; set; }
+        public decimal? MabarDayPriceSiudi { get; set; }
+        public decimal? MabarDayPriceNefesh { get; set; }
+        public decimal? BeriutHanefeshDayPriceSiudi { get; set; }
+        public decimal? BeriutHanefeshDayPriceNefesh { get; set; }
+        public short? NeedUpdate { get; set; }
+        public bool? BRound { get; set; }
+        public string MiunIdgroup { get; set; }
+        public short? LogoAlign { get; set; }
+        public string MaintenanceComments { get; set; }
+        public decimal? AuctionDayPriceSiudi { get; set; }
+        public decimal? AuctionDayPriceNefesh { get; set; }
+        public short? MakeTnuotByClass { get; set; }
+        public bool? IncludeIdnum { get; set; }
+        public int? DefShehiaMadad { get; set; }
+        public decimal? MabarDayPriceSiudiOld { get; set; }
+        public string DayarCap { get; set; }
+        public bool? BAutoTask { get; set; }
+        public int? Kind1Id105 { get; set; }
+        public bool? BEditId { get; set; }
+        public bool? BActiveDirectory { get; set; }
+        public string DomainName { get; set; }
+        public bool? BMustDoctorOnTnuot { get; set; }
+        public bool? BArchiveJustOnLeave { get; set; }
+        public bool? BMustStrongPassowrd { get; set; }
+        public bool? BBlockTnuotOnArchive { get; set; }
+        public bool? BShowResponsible { get; set; }
+        public bool? MustStrongPassword { get; set; }
+        public bool? BShowDayarKod { get; set; }
+        public bool? ShowEnterPic { get; set; }
+        public string RefueeManager { get; set; }
+        public string DrugNotInMirsham { get; set; }
+        public string MainNurse { get; set; }
+        public int? IsMedicalManager { get; set; }
+        public decimal? MabarDayPriceZonda { get; set; }
+        public string DrugnotinmirshamOld { get; set; }
+        public string MahlakaCap { get; set; }
+        public bool UrlInterai { get; set; }
+        public bool BInterai { get; set; }
+        public long? KodMosadBm { get; set; }
+        public string MosadCap { get; set; }
+        public string GuestCap { get; set; }
+        public bool BNoActive { get; set; }
+        public decimal? MabarDayPriceKorona { get; set; }
+        public int? MailSiteId { get; set; }
+    }
+}
