@@ -34,16 +34,25 @@ namespace PuzzlesoftApi
                         //     opts.TokenHeaderName = "X-Custom-Token-Header";
                     }
                 );
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
