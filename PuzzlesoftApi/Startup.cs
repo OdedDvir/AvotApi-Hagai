@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PuzzlesoftApi.Auth;
 
+
 namespace PuzzlesoftApi
 {
     public class Startup
