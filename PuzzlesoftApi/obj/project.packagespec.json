@@ -26,6 +26,10 @@
   "frameworks": {
     "netcoreapp5.0": {
       "dependencies": {
+        "GoogleAuthenticator": {
+          "target": "Package",
+          "version": "[2.2.0, )"
+        },
         "Microsoft.AspNetCore.Identity": {
           "target": "Package",
           "version": "[2.2.0, )"

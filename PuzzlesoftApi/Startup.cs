@@ -25,9 +25,9 @@ namespace PuzzlesoftApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddAuthentication(MyCustomTokenAuthOptions.DefaultScemeName)
-                .AddScheme<MyCustomTokenAuthOptions, MyCustomTokenAuthHandler>(
-                    MyCustomTokenAuthOptions.DefaultScemeName,
+            services.AddAuthentication(AuthOptions.DefaultScemeName)
+                .AddScheme<AuthOptions, AuthTokenHandler>(
+                    AuthOptions.DefaultScemeName,
                     opts =>
                     {
                         // you can change the token header name here by :

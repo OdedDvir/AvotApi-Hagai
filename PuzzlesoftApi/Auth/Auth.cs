@@ -21,37 +21,29 @@ using JsonProp = Newtonsoft.Json.JsonPropertyAttribute;
 
 namespace PuzzlesoftApi.Auth
 {
-    public class MyCustomTokenAuthOptions : AuthenticationSchemeOptions
+    public class AuthOptions : AuthenticationSchemeOptions
     {
         public const string DefaultScemeName = "AuthScheme";
     }
 
-    public class MyCustomTokenAuthHandler : AuthenticationHandler<MyCustomTokenAuthOptions>
+    public class AuthTokenHandler : AuthenticationHandler<AuthOptions>
     {
-        public MyCustomTokenAuthHandler(IOptionsMonitor<MyCustomTokenAuthOptions> options, ILoggerFactory logger,
+        public AuthTokenHandler(IOptionsMonitor<AuthOptions> options, ILoggerFactory logger,
             UrlEncoder encoder, ISystemClock clock)
             : base(options, logger, encoder, clock)
         {
         }
-
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             AuthPayload payload = null;
             try
             {
-                var buffer = Convert.FromBase64String(Request.Headers["Authorization"]);
-                var crypt = new AesManaged()
-                {
-                    Key = AuthSecret.Key,
-                    IV = AuthSecret.IV
-                };
-                payload = JsonSerializer.Deserialize<AuthPayload>(
-                    Encoding.UTF8.GetString(
-                        crypt.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length)
-                    )
-                );
+                payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
                 if (payload.Expiration < DateTime.Now)
                     return Task.FromResult(AuthenticateResult.Fail("token expired"));
+                if (!payload.hasMFAEnabled)
+                    return Task.FromResult(
+                        AuthenticateResult.Fail("authentication process was not completed by the user"));
             }
             catch (Exception e)
             {
@@ -84,6 +76,7 @@ namespace PuzzlesoftApi.Auth
         public string Token { get; set; }
         [JsonProp("expiration")]
         public DateTime Expiration { get; set; }
+        public string QRCodeUrl { get; set; }
     }
 
     public class AuthPayload
@@ -92,6 +85,7 @@ namespace PuzzlesoftApi.Auth
         public string UserName { get; set; }
         public int? ProfileId { get; set; }
         public DateTime Expiration { get; set; }
+        public bool hasMFAEnabled { get; set; }
     }
 
     public static class AuthSecret
@@ -104,5 +98,40 @@ namespace PuzzlesoftApi.Auth
 
         public static byte[] IV = new byte[16]
             {157, 105, 83, 121, 56, 252, 173, 130, 209, 91, 210, 7, 153, 103, 155, 196};
+
+        public static string AccountSecret(string account)
+        {
+            return $"PUZZLESECRET{account}";
+        }
+
+        public static AuthPayload DecryptToken(string base64buffer)
+        {
+            var buffer = Convert.FromBase64String(base64buffer);
+            var crypt = new AesManaged()
+            {
+                Key = AuthSecret.Key,
+                IV = AuthSecret.IV
+            };
+            var payload = JsonSerializer.Deserialize<AuthPayload>(
+                Encoding.UTF8.GetString(
+                    crypt.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length)
+                )
+            );
+            return payload;
+        }
+
+        public static string EncryptToken(AuthPayload payload)
+        {
+            var crypt = new AesManaged()
+            {
+                Key = AuthSecret.Key,
+                IV = AuthSecret.IV
+            };
+            var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize<AuthPayload>(payload));
+            var token = Convert.ToBase64String(
+                crypt.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length)
+            );
+            return token;
+        }
     }
 }

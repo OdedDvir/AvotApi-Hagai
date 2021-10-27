@@ -11,6 +11,7 @@
         </e>
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
+          <e p="TwoFactorAuthenticationController.cs" t="Include" />
           <e p="UserController.cs" t="Include" />
           <e p="WeatherForecastController.cs" t="Include" />
         </e>

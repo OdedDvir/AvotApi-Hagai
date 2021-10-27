@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Google.Authenticator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PuzzlesoftApi.Auth;
@@ -33,6 +34,31 @@ namespace PuzzlesoftApi.Controllers
             }
         }
 
+        [HttpPost("mfaverify")]
+        public CustomToken MFAPost([FromBody]int code)
+        {
+            AuthPayload payload = null;
+            try
+            {
+                payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
+                if (payload.Expiration < DateTime.Now)
+                    return null;
+                if (!new TwoFactorAuthenticator().ValidateTwoFactorPIN(
+                    AuthSecret.AccountSecret(payload.UserId.ToString()),
+                    code.ToString()))
+                    return null;
+                payload.hasMFAEnabled = true;
+                return new CustomToken()
+                {
+                    Expiration = payload.Expiration,
+                    Token = AuthSecret.EncryptToken(payload)
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
         [HttpPost("auth")]
         public CustomToken Post([FromBody] UserCredentials cred)
         {
@@ -51,19 +77,14 @@ namespace PuzzlesoftApi.Controllers
                     UserId = cd.Id,
                     UserName = cd.NameView
                 };
-                var crypt = new AesManaged()
-                {
-                    Key = AuthSecret.Key,
-                    IV = AuthSecret.IV
-                };
-                var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize<AuthPayload>(AuthPayload));
-                var token = Convert.ToBase64String(
-                    crypt.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length)
-                );
+                var token = AuthSecret.EncryptToken(AuthPayload);
+                var setupCode = new TwoFactorAuthenticator().GenerateSetupCode("פאזלסופט", cd.NameView,
+                    AuthSecret.AccountSecret(cd.Id.ToString()), false);
                 return new CustomToken()
                 {
                     Token = token,
-                    Expiration = expiration
+                    Expiration = expiration,
+                    QRCodeUrl = setupCode.QrCodeSetupImageUrl
                 };
             }
         }
