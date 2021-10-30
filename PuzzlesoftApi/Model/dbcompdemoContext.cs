@@ -1087,7 +1087,7 @@ namespace PuzzlesoftApi.Model
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Password=puzz@support;Persist Security Info=True;User ID=puzzlesupport;Initial Catalog=dbcompdemo;Data Source=192.168.85.6");
+                optionsBuilder.UseSqlServer("Password=puzz@support;User ID=puzzlesupport;Initial Catalog=dbcompdemo;Data Source=192.168.85.6;Trust Server Certificate=True;Encrypt=False");
             }
         }
 
