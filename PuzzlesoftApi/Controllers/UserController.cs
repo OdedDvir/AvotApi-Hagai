@@ -29,12 +29,14 @@ namespace PuzzlesoftApi.Controllers
         private readonly IUserService _userService;
         private readonly dbcompdemoContext _context;
         private readonly ITotlService _totl;
+        private readonly ILogger<UserController> _logger;
         
-        public UserController(IUserService userService, dbcompdemoContext context, ITotlService totl)
+        public UserController(IUserService userService, dbcompdemoContext context, ITotlService totl, ILogger<UserController> logger)
         {
             _userService = userService;
             _context = context;
             _totl = totl;
+            _logger = logger;
         }
 
         [HttpGet("{id}")]
@@ -54,8 +56,7 @@ namespace PuzzlesoftApi.Controllers
         {
             try
             {
-                AuthPayload payload = null;
-                payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
+                AuthPayload payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
                 if (payload.Expiration < DateTime.Now)
                     return null;
                 if (false)
@@ -73,6 +74,7 @@ namespace PuzzlesoftApi.Controllers
                     }
                 }
 
+                payload.hasMFAEnabled = true;
                 return new CustomToken()
                 {
                     Expiration = payload.Expiration,
@@ -111,7 +113,8 @@ namespace PuzzlesoftApi.Controllers
                 var code = _totl.CreateTotl(cd.Id.ToString());
 
                 var s = await SmsService.SendSms(cd.Phone1.Coalesce(cd.Phone2, cd.Phone3, cd.Phone4),
-                    $"להשלמת ההתחברות, אנא הכניסו את הקוד הבא: {code} \r\nשים לב, הקוד תקף ל-5 דקות");
+                    $"להשלמת ההתחברות, אנא הכניסו את הקוד הבא: {code} \r\nשימו לב, הקוד תקף ל-5 דקות");
+                _logger.LogDebug(s);
             }
 
             return new CustomToken()
@@ -121,57 +124,29 @@ namespace PuzzlesoftApi.Controllers
                 //QRCodeUrl = setupCode.QrCodeSetupImageUrl // for the meantime.
             };
         }
-
-        [HttpPost]
-        public async Task<Dictionary<string, object>> IsUserExists([FromBody] UserCredentials cred)
-        {
-            try
-            {
-                ClientDetail cd = await _userService.GetUserByCredentialsAsync(cred);
-                if (cd == null)
-                    return null;
-                var medicalGroup =
-                    await _context.TblDefMedicalGroups.FirstOrDefaultAsync(mg => mg.Id == cd.MedicalGroupId);
-                return new Dictionary<string, object>()
-                {
-                    {"IsSuccess", true},
-                    {"UserId", cd.Id},
-                    {"MedicalGroupId", cd.MedicalGroupId},
-                    {"MedicalGroupName", medicalGroup.Item},
-                    {"FollowId", medicalGroup.FollowId},
-                    {"UserName", cd.WorkerUserName}
-                };
-            }
-            catch (Exception)
-            {
-                return new Dictionary<string, object>()
-                {
-                    {"IsSuccess", false},
-                    {"UserId", null},
-                    {"MedicalGroupId", null},
-                    {"MedicalGroupName", null},
-                    {"FollowId", null},
-                    {"UserName", null}
-                };
-            }
-        }
-
+        
+        [Authorize]
         [HttpPost("is_user_in_system")]
         public List<Dictionary<string, object>> IsUserInSystem([FromBody] IsUserInSystemArgs args)
         {
             return _context.ExecuteProc("pr_IsUserInSystem", args)["Table"];
         }
+        
+        [Authorize]
         [HttpPost("ret_data_to_client_to_shikum")]
         public Dictionary<string,List<Dictionary<string, object>>> RetDataToClientToShikum([FromBody]RetDataToClientToShikumArgs args)
         {
             return _context.ExecuteProc("pr_RetDataToClientToShikum", args);
         }
 
+        [Authorize]
         [HttpPost("add_rep_to_follow")]
         public object AddRepToFollow([FromBody]AddRepToFollowArgs args)
         {
             return _context.ExecuteProcAndGetValue("pr_AddRepToFollow", args);
         }
+        
+        [Authorize]
         [HttpDelete("del_rep_to_follow")]
         public object DelRepToFollow([FromBody]DelRepToFollowArgs args)
         {
