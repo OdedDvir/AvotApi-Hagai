@@ -68,6 +68,14 @@ namespace PuzzlesoftApi.Auth
         public string Username { get; set; }
         [JsonProp("password")]
         public string Password { get; set; }
+        [JsonProp("auth_method")]
+
+        public string AuthMethod { get; set; } = AuthMethods.SmsAuth;
+    }
+    public static class AuthMethods
+    {
+        public const string GoogleAuth = "google_auth";
+        public const string SmsAuth = "sms_auth";
     }
 
     public class CustomToken

@@ -1082,6 +1082,7 @@ namespace PuzzlesoftApi.Model
         public virtual DbSet<XmlTnu> XmlTnus { get; set; }
         public virtual DbSet<XmlTran> XmlTrans { get; set; }
         public virtual DbSet<Yair> Yairs { get; set; }
+        public virtual DbSet<pr_RetDataToClientToShikumModel> pr_RetDataToClientToShikumModel { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -1095,6 +1096,7 @@ namespace PuzzlesoftApi.Model
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Hebrew_CI_AS");
 
+            modelBuilder.Entity<pr_RetDataToClientToShikumModel>(entity => entity.HasNoKey());
             modelBuilder.Entity<AgafItemsAction>(entity =>
             {
                 entity.HasNoKey();
@@ -39600,5 +39602,6 @@ namespace PuzzlesoftApi.Model
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        
     }
 }

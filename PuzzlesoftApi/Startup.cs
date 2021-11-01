@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -47,6 +48,7 @@ namespace PuzzlesoftApi
             });
             services.AddDbContext<dbcompdemoContext>();
             services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<ITotlService, TotlService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

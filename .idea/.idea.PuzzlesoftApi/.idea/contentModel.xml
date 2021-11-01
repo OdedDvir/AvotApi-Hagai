@@ -15,6 +15,7 @@
           <e p="WeatherForecastController.cs" t="Include" />
         </e>
         <e p="genModels.bat" t="Include" />
+        <e p="Helper.cs" t="Include" />
         <e p="Model" t="Include">
           <e p="AgafItemsAction.cs" t="Include" />
           <e p="Appointment.cs" t="Include" />
@@ -60,6 +61,7 @@
           <e p="Csvtest1.cs" t="Include" />
           <e p="Csvtest2.cs" t="Include" />
           <e p="Cust1.cs" t="Include" />
+          <e p="CustomModels.cs" t="Include" />
           <e p="DashCapacity.cs" t="Include" />
           <e p="DayarimFromxl.cs" t="Include" />
           <e p="dbcompdemoContext.cs" t="Include" />
@@ -1095,9 +1097,10 @@
           <e p="launchSettings.json" t="Include" />
         </e>
         <e p="PuzzlesoftApi.csproj" t="IncludeRecursive" />
-        <e p="Service.cs.exclude" t="Include" />
         <e p="Services" t="Include">
+          <e p="ITotlService.cs" t="Include" />
           <e p="IUserService.cs" t="Include" />
+          <e p="TotlService.cs" t="Include" />
           <e p="UserService.cs" t="Include" />
         </e>
         <e p="Startup.cs" t="Include" />
