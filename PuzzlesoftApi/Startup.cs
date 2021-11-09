@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PuzzlesoftApi.Auth;
+using PuzzlesoftApi.Middleware;
 using PuzzlesoftApi.Model;
 using PuzzlesoftApi.Services;
 
@@ -63,6 +64,7 @@ namespace PuzzlesoftApi
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

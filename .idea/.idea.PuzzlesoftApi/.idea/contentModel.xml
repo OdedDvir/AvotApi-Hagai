@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
     <e p="C:\projects\PuzzlesoftApi" t="IncludeFlat">
@@ -12,10 +12,12 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
           <e p="UserController.cs" t="Include" />
-          <e p="WeatherForecastController.cs" t="Include" />
         </e>
         <e p="genModels.bat" t="Include" />
         <e p="Helper.cs" t="Include" />
+        <e p="Middleware" t="Include">
+          <e p="ErrorHandlerMiddleware.cs" t="Include" />
+        </e>
         <e p="Model" t="Include">
           <e p="AgafItemsAction.cs" t="Include" />
           <e p="Appointment.cs" t="Include" />
@@ -1104,7 +1106,6 @@
           <e p="UserService.cs" t="Include" />
         </e>
         <e p="Startup.cs" t="Include" />
-        <e p="WeatherForecast.cs" t="Include" />
       </e>
       <e p="PuzzlesoftApi.sln" t="IncludeFlat" />
       <e p="PuzzlesoftApi.UnitTests" t="IncludeRecursive">

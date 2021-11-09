@@ -14,9 +14,14 @@ namespace PuzzlesoftApi.Services
     public class TotlService : ITotlService
     {
         private Dictionary<string, string> TotlVault = new Dictionary<string, string>();
+        private Dictionary<string, CancellationTokenSource> TotlExpTasks = new Dictionary<string, CancellationTokenSource>();
 
         public string CreateTotl(string id)
         {
+            if (TotlExpTasks.Remove(id, out var ct))
+            {
+                ct.Cancel();
+            }
             char[] codeArr = new char[6];
             var rand = new RNGCryptoServiceProvider();
             var s = "1234567890";
@@ -28,17 +33,36 @@ namespace PuzzlesoftApi.Services
             }
             var code = new string(codeArr);
             TotlVault[id] = code;
+            var ctSource = new CancellationTokenSource();
             Task.Run(() =>
             {
-                Thread.Sleep(300000);
-                TotlVault.Remove(id);
-            });
+                Thread.Sleep(120000);
+                if (!ctSource.Token.IsCancellationRequested)
+                {
+                    TotlExpTasks.Remove(id);
+                    TotlVault.Remove(id);
+                }
+            }, ctSource.Token);
+            TotlExpTasks[id] = ctSource;
             return code;
         }
 
         public bool CheckTotl(string id, string code)
         {
-            return TotlVault.ContainsKey(id) && TotlVault[id] == code;
+            if (TotlVault.ContainsKey(id) && TotlVault[id] == code)
+            {
+                TotlVault.Remove(id);
+                return true;
+            }
+
+            throw new PuzzlesoftGlobalError()
+            {
+                Data =
+                {
+                    {"error_code", "300"},
+                    {"error_message", "קוד האימות שגוי"}
+                }
+            };
         }
     }
 }
