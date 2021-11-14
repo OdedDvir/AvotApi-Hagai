@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using ElmahCore;
+using ElmahCore.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +14,7 @@ using PuzzlesoftApi.Auth;
 using PuzzlesoftApi.Middleware;
 using PuzzlesoftApi.Model;
 using PuzzlesoftApi.Services;
+using Task = System.Threading.Tasks.Task;
 
 
 namespace PuzzlesoftApi
@@ -28,15 +31,11 @@ namespace PuzzlesoftApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddAuthentication(AuthOptions.DefaultScemeName)
                 .AddScheme<AuthOptions, AuthTokenHandler>(
                     AuthOptions.DefaultScemeName,
-                    opts =>
-                    {
-                        // you can change the token header name here by :
-                        //     opts.TokenHeaderName = "X-Custom-Token-Header";
-                    }
+                    opts => { }
                 );
             services.AddCors(options =>
             {
@@ -50,6 +49,7 @@ namespace PuzzlesoftApi
             services.AddDbContext<dbcompdemoContext>();
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton<ITotlService, TotlService>();
+            services.AddElmah<XmlFileErrorLog>(options => { options.LogPath = "~/log";options.Filters.Add(new ElmahFilter());});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +65,7 @@ namespace PuzzlesoftApi
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseElmah();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

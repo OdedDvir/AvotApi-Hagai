@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Linq;
 
 #nullable disable
 
@@ -15,6 +20,45 @@ namespace PuzzlesoftApi.Model
         public dbcompdemoContext(DbContextOptions<dbcompdemoContext> options)
             : base(options)
         {
+        }
+
+        public Dictionary<string, List<Dictionary<string, object>>> ExecuteProc(string proc,
+            object args, ClaimsPrincipal user=null)
+        {
+            using (var command = this.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = proc;
+                command.CommandType = CommandType.StoredProcedure;
+                command.AddParameters(args, user);
+                this.Database.OpenConnection();
+             
+                using (var adp = DbProviderFactories.GetFactory(command.Connection).CreateDataAdapter())
+                {
+                    adp.SelectCommand = command;
+                    DataSet ds = new DataSet();
+                    adp.Fill(ds);
+                    if (ds.Tables.Count > 0 &&
+                        ds.Tables[0].Rows.Count > 0 &&
+                        ds.Tables[0].Columns.Contains("errorCode") &&
+                        ds.Tables[0].Columns.Contains("errorMessage"))
+                        throw new PuzzlesoftGlobalError
+                        {
+                            Data =
+                            {
+                                {"error_code", ds.Tables[0].Rows[0]["errorCode"].ToString()},
+                                {"error_message", ds.Tables[0].Rows[0]["errorMessage"].ToString()}
+                            }
+                        };
+                    return ds.ToDictionary();
+                }
+            }
+        }
+        public object ExecuteProcAndGetValue(string proc,
+            object args, ClaimsPrincipal user=null)
+        {
+            var obj = this.ExecuteProc(proc, args, user);
+            var firstRow = obj["Table"][0];
+            return firstRow.Values.First();
         }
 
         public virtual DbSet<AgafItemsAction> AgafItemsActions { get; set; }

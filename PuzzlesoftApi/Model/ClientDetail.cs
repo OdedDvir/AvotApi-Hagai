@@ -201,5 +201,10 @@ namespace PuzzlesoftApi.Model
         public virtual ICollection<TblClientGuardian> TblClientGuardians { get; set; }
         public virtual ICollection<TblClientsForm> TblClientsForms { get; set; }
         public virtual ICollection<TblWorkerRoom> TblWorkerRooms { get; set; }
+
+        public string GetPhoneNumber()
+        {
+            return Phone1.Coalesce(Phone2, Phone3, Phone4);
+        }
     }
 }

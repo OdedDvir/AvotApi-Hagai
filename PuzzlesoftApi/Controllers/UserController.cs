@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using B3.Extensions.Data;
 using Google.Authenticator;
@@ -96,8 +97,12 @@ namespace PuzzlesoftApi.Controllers
             else
             {
                 var code = _totl.CreateTotl(cd.Id.ToString());
-
-                var s = await SmsService.SendSms(cd,
+                var phoneNumber = cd.GetPhoneNumber();
+                if (phoneNumber == null)
+                    Helper.ReturnError(ServerErrors.PhoneNumberDoesNotExists);
+                if (!new Regex(@"^(?:\+972|0)5\d\-?\d{7}$").IsMatch(phoneNumber))
+                    Helper.ReturnError(ServerErrors.InvalidPhoneNumber);
+                var s = await SmsService.SendSms(phoneNumber,
                     string.Format(_configuration.GetValue<string>("ApiSettings:SmsMessage"), code));
                 _logger.LogDebug(s);
             }
@@ -152,7 +157,7 @@ namespace PuzzlesoftApi.Controllers
             var cd = _context.ClientDetails.Find(payload.UserId);
             var code = _totl.CreateTotl(cd.Id.ToString());
 
-            var s = await SmsService.SendSms(cd,
+            var s = await SmsService.SendSms(cd.GetPhoneNumber(),
                 string.Format(_configuration.GetValue<string>("ApiSettings:SmsMessage"), code));
             _logger.LogDebug(s);
         }

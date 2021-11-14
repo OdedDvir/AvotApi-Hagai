@@ -38,12 +38,14 @@ namespace PuzzlesoftApi.Auth
             AuthPayload payload = null;
             try
             {
+                if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]))
+                    return Task.FromResult<AuthenticateResult>(null);
                 payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
                 if (payload.Expiration < DateTime.Now)
-                    return Task.FromResult(AuthenticateResult.Fail("token expired"));
+                    return Task.FromResult(AuthenticateResult.Fail(Messages._TokenExpired));
                 if (!payload.hasMFAEnabled)
                     return Task.FromResult(
-                        AuthenticateResult.Fail("authentication process was not completed by the user"));
+                        AuthenticateResult.Fail(Messages._MFANotValid));
             }
             catch (Exception e)
             {

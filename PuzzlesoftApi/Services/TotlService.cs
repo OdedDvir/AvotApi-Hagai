@@ -55,14 +55,8 @@ namespace PuzzlesoftApi.Services
                 return true;
             }
 
-            throw new PuzzlesoftGlobalError()
-            {
-                Data =
-                {
-                    {"error_code", "300"},
-                    {"error_message", "קוד האימות שגוי"}
-                }
-            };
+            Helper.ReturnError(ServerErrors.InvalidMfaCode);
+            return false;
         }
     }
 }

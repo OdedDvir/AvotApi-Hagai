@@ -2,3 +2,5 @@ PuzzlesoftApi/bin/
 PuzzlesoftApi/obj/
 PuzzlesoftApi.UnitTests/bin/
 PuzzlesoftApi.UnitTests/obj/
+PuzzlesoftApi/log/
+.idea/.idea.PuzzlesoftApi/.idea/contentModel.xml
