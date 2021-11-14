@@ -41,14 +41,7 @@ namespace PuzzlesoftApi.Model
                         ds.Tables[0].Rows.Count > 0 &&
                         ds.Tables[0].Columns.Contains("errorCode") &&
                         ds.Tables[0].Columns.Contains("errorMessage"))
-                        throw new PuzzlesoftGlobalError
-                        {
-                            Data =
-                            {
-                                {"error_code", ds.Tables[0].Rows[0]["errorCode"].ToString()},
-                                {"error_message", ds.Tables[0].Rows[0]["errorMessage"].ToString()}
-                            }
-                        };
+                        Helper.ReturnError(ds.Tables[0].Rows[0]["errorCode"].ToString(), ds.Tables[0].Rows[0]["errorMessage"].ToString());
                     return ds.ToDictionary();
                 }
             }

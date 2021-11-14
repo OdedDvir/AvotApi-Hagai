@@ -33,12 +33,4 @@ namespace PuzzlesoftApi
         };
     }
 
-    public class ElmahFilter : IErrorFilter
-    {
-        public void OnErrorModuleFiltering(object sender, ExceptionFilterEventArgs args)
-        {
-            if (args.Exception is PuzzlesoftGlobalError)
-                args.Dismiss();
-        }
-    }
 }

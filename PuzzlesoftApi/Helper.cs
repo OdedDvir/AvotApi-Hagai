@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using ElmahCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Converters;
@@ -143,4 +144,13 @@ namespace PuzzlesoftApi
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class UserIdAttribute : Attribute {}
+    
+    public class ElmahFilter : IErrorFilter
+    {
+        public void OnErrorModuleFiltering(object sender, ExceptionFilterEventArgs args)
+        {
+            if (args.Exception is PuzzlesoftGlobalError)
+                args.Dismiss();
+        }
+    }
 }
