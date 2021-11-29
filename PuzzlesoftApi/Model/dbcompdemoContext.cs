@@ -22,7 +22,81 @@ namespace PuzzlesoftApi.Model
         {
         }
 
-        public Dictionary<string, List<Dictionary<string, object>>> ExecuteProc(string proc,
+        public PuzzleResponse<PuzzleDataset<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11>> ExecuteProc<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11>(string proc,
+            object args, ClaimsPrincipal user=null)
+            where T1: new()
+            where T2: new()
+            where T3: new() 
+            where T4: new() 
+            where T5: new() 
+            where T6: new() 
+            where T7: new() 
+            where T8: new() 
+            where T9: new() 
+            where T10: new()
+            where T11: new()
+        {
+            using (var command = this.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = proc;
+                command.CommandType = CommandType.StoredProcedure;
+                command.AddParameters(args, user);
+                this.Database.OpenConnection();
+             
+                using (var adp = DbProviderFactories.GetFactory(command.Connection).CreateDataAdapter())
+                {
+                    adp.SelectCommand = command;
+                    DataSet ds = new DataSet();
+                    adp.Fill(ds);
+                    if (ds.Tables.Count > 0 &&
+                        ds.Tables[0].Rows.Count > 0 &&
+                        ds.Tables[0].Columns.Contains("errorCode") &&
+                        ds.Tables[0].Columns.Contains("errorMessage"))
+                        return new PuzzleResponse<PuzzleDataset<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>()
+                        {
+                            ErrorCode = ds.Tables[0].Rows[0]["errorCode"].ToString(),
+                            ErrorMessage = ds.Tables[0].Rows[0]["errorMessage"].ToString()
+                        };
+                    return new PuzzleResponse<PuzzleDataset<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>
+                    {
+                        Response = ds.ToResponse<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>()
+                    };
+                }
+            }
+        }
+        public PuzzleResponse<List<T>> ExecuteProc<T>(string proc,
+            object args, ClaimsPrincipal user=null)
+            where T: new()
+        {
+            using (var command = this.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = proc;
+                command.CommandType = CommandType.StoredProcedure;
+                command.AddParameters(args, user);
+                this.Database.OpenConnection();
+             
+                using (var adp = DbProviderFactories.GetFactory(command.Connection).CreateDataAdapter())
+                {
+                    adp.SelectCommand = command;
+                    DataSet ds = new DataSet();
+                    adp.Fill(ds);
+                    if (ds.Tables.Count > 0 &&
+                        ds.Tables[0].Rows.Count > 0 &&
+                        ds.Tables[0].Columns.Contains("errorCode") &&
+                        ds.Tables[0].Columns.Contains("errorMessage"))
+                        return new PuzzleResponse<List<T>>()
+                        {
+                            ErrorCode = ds.Tables[0].Rows[0]["errorCode"].ToString(),
+                            ErrorMessage = ds.Tables[0].Rows[0]["errorMessage"].ToString()
+                        };
+                    return new PuzzleResponse<List<T>>
+                    {
+                        Response = ds.ToResponse<T>()
+                    };
+                }
+            }
+        }
+        public PuzzleResponse<string> ExecuteProc(string proc,
             object args, ClaimsPrincipal user=null)
         {
             using (var command = this.Database.GetDbConnection().CreateCommand())
@@ -41,17 +115,50 @@ namespace PuzzlesoftApi.Model
                         ds.Tables[0].Rows.Count > 0 &&
                         ds.Tables[0].Columns.Contains("errorCode") &&
                         ds.Tables[0].Columns.Contains("errorMessage"))
-                        Helper.ReturnError(ds.Tables[0].Rows[0]["errorCode"].ToString(), ds.Tables[0].Rows[0]["errorMessage"].ToString());
-                    return ds.ToDictionary();
+                        return new PuzzleResponse<string>()
+                        {
+                            ErrorCode = ds.Tables[0].Rows[0]["errorCode"].ToString(),
+                            ErrorMessage = ds.Tables[0].Rows[0]["errorMessage"].ToString()
+                        };
+                    return new PuzzleResponse<string>
+                    {
+                        Response = (string) ds.Tables[0].Rows[0][0]
+                    };
                 }
             }
         }
-        public object ExecuteProcAndGetValue(string proc,
-            object args, ClaimsPrincipal user=null)
+
+        public PuzzleResponse<T> ExecuteProcAndGetValue<T>(string proc,
+            object args, ClaimsPrincipal user = null)
+            where T : struct
         {
-            var obj = this.ExecuteProc(proc, args, user);
-            var firstRow = obj["Table"][0];
-            return firstRow.Values.First();
+            using (var command = this.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = proc;
+                command.CommandType = CommandType.StoredProcedure;
+                command.AddParameters(args, user);
+                this.Database.OpenConnection();
+
+                using (var adp = DbProviderFactories.GetFactory(command.Connection).CreateDataAdapter())
+                {
+                    adp.SelectCommand = command;
+                    DataSet ds = new DataSet();
+                    adp.Fill(ds);
+                    if (ds.Tables.Count > 0 &&
+                        ds.Tables[0].Rows.Count > 0 &&
+                        ds.Tables[0].Columns.Contains("errorCode") &&
+                        ds.Tables[0].Columns.Contains("errorMessage"))
+                        return new PuzzleResponse<T>()
+                        {
+                            ErrorCode = ds.Tables[0].Rows[0]["errorCode"].ToString(),
+                            ErrorMessage = ds.Tables[0].Rows[0]["errorMessage"].ToString()
+                        };
+                    return new PuzzleResponse<T>
+                    {
+                        Response = (T) ds.Tables[0].Rows[0][0]
+                    };
+                }
+            }
         }
 
         public virtual DbSet<AgafItemsAction> AgafItemsActions { get; set; }

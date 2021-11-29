@@ -88,7 +88,7 @@ namespace PuzzlesoftApi.Auth
         public DateTime Expiration { get; set; }
         public string QRCodeUrl { get; set; }
         [JsonProp("user_details")]
-        public Dictionary<string, object> UserDetails { get; set; }
+        public IsUserInSystemTable UserDetails { get; set; }
     }
 
     public class AuthPayload

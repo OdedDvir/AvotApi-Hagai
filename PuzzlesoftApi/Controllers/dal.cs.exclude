@@ -9,7 +9,7 @@ using PuzzlesoftApi.Model;
 
 namespace PuzzlesoftApi.Controllers
 {
-    [Route("[controller]")]
+    //[Route("[controller]")]
     public class DalController : ControllerBase
     {
         private readonly dbcompdemoContext _context;

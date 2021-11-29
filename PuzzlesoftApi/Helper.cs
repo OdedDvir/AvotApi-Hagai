@@ -19,17 +19,90 @@ namespace PuzzlesoftApi
 {
     public static class Helper
     {
-        public static void ReturnError(string errorCode, string errorMessage)
+        public static PuzzleResponse<T> ReturnError<T>(string errorCode, string errorMessage)
         {
-            throw new PuzzlesoftGlobalError()
+            return new PuzzleResponse<T>()
             {
-                Data = { {"error_code", errorCode}, {"error_message", errorMessage}}
+                ErrorCode = errorCode,
+                ErrorMessage = errorMessage
             };
         }
 
-        public static void ReturnError(ServerErrors error)
+        private static List<T> _getDatasetTable<T>(this DataSet ds, int tableIndex = 0) where T : new()
         {
-            ReturnError(((int)error).ToString(), Errors.errors[error]);
+            if (ds.Tables.Count > tableIndex)
+            {
+                List<T> respTable = new List<T>();
+                var table = ds.Tables[tableIndex];
+                foreach (DataRow row in table.Rows)
+                {
+                    T t = new T();
+                    foreach (var property in typeof(T).GetProperties())
+                    {
+                        try
+                        {
+                            property.SetValue(t, row[property.Name]);
+                        }
+                        catch (Exception) {}
+                    }
+                    respTable.Add(t);
+                }
+
+                return respTable;
+            }
+
+            return null;
+        }
+        public static PuzzleDataset<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> ToResponse<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(
+            this DataSet ds) 
+            where T1: new()
+            where T2: new()
+            where T3: new() 
+            where T4: new() 
+            where T5: new() 
+            where T6: new() 
+            where T7: new() 
+            where T8: new() 
+            where T9: new() 
+            where T10: new()
+            where T11: new()
+        {
+            int tableCounter = 0;
+            var puzzleDataset = new PuzzleDataset<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>
+            {
+                Table = ds._getDatasetTable<T1>(tableCounter++),
+                Table1 = ds._getDatasetTable<T2>(tableCounter++),
+                Table2 = ds._getDatasetTable<T3>(tableCounter++),
+                Table3 = ds._getDatasetTable<T4>(tableCounter++),
+                Table4 = ds._getDatasetTable<T5>(tableCounter++),
+                Table5 = ds._getDatasetTable<T6>(tableCounter++),
+                Table6 = ds._getDatasetTable<T7>(tableCounter++),
+                Table7 = ds._getDatasetTable<T8>(tableCounter++),
+                Table8 = ds._getDatasetTable<T9>(tableCounter++),
+                Table9 = ds._getDatasetTable<T10>(tableCounter++),
+                Table10 = ds._getDatasetTable<T11>(tableCounter)
+            };
+            return puzzleDataset;
+        }
+        public static List<T> ToResponse<T>(
+            this DataSet ds) 
+            where T: new()
+        {
+            return ds._getDatasetTable<T>();
+        }
+        
+        public static string ToResponse(
+            this DataSet ds)
+        {
+            if (ds.Tables[0].Rows.Count > 0)
+                return ds.Tables[0].Rows[0][0]?.ToString();
+            
+            return string.Empty;
+        }
+
+        public static PuzzleResponse<T> ReturnError<T>(ServerErrors error)
+        {
+            return ReturnError<T>(((int)error).ToString(), Errors.errors[error]);
         }
         public static Dictionary<string, List<Dictionary<string, object>>> ToDictionary(this DataSet ds)
         {

@@ -64,7 +64,7 @@ namespace PuzzlesoftApi
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<ErrorHandlerMiddleware>();
+            //app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseElmah();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

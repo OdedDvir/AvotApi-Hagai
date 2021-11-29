@@ -54,8 +54,6 @@ namespace PuzzlesoftApi.Services
                 TotlVault.Remove(id);
                 return true;
             }
-
-            Helper.ReturnError(ServerErrors.InvalidMfaCode);
             return false;
         }
     }

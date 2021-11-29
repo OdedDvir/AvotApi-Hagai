@@ -43,41 +43,60 @@ namespace PuzzlesoftApi.Controllers
         }
 
         [HttpPost("mfaverify")]
-        public CustomToken MFAPost([FromBody] string code)
+        public async Task<PuzzleResponse<CustomToken>> MFAPost([FromBody] string code)
         {
-            AuthPayload payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
-            if (payload.Expiration < DateTime.Now)
-                return null;
-            if (payload.MFAMethod == AuthMethods.GoogleAuth)
+            return await Task.Run(() =>
             {
-                if (!new TwoFactorAuthenticator().ValidateTwoFactorPIN(
-                    AuthSecret.AccountSecret(payload.UserId.ToString()),
-                    code.ToString()))
+                AuthPayload payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
+                if (payload.Expiration < DateTime.Now)
                     return null;
-            }
-            else
-            {
-                // will throw error if invalid
-                _totl.CheckTotl(payload.UserId.ToString(), code);
-            }
+                bool hasSucceeded;
+                if (payload.MFAMethod == AuthMethods.GoogleAuth)
+                {
+                    hasSucceeded = new TwoFactorAuthenticator().ValidateTwoFactorPIN(
+                        AuthSecret.AccountSecret(payload.UserId.ToString()),
+                        code);
+                }
+                else
+                {
+                    hasSucceeded = _totl.CheckTotl(payload.UserId.ToString(), code);
+                }
 
-            payload.hasMFAEnabled = true;
-            return new CustomToken()
-            {
-                Expiration = payload.Expiration,
-                Token = AuthSecret.EncryptToken(payload)
-            };
+                if (!hasSucceeded)
+                    return Helper.ReturnError<CustomToken>(ServerErrors.InvalidMfaCode);
+
+                payload.hasMFAEnabled = true;
+                return new PuzzleResponse<CustomToken>()
+                {
+                    Response = new CustomToken()
+                    {
+                        Expiration = payload.Expiration,
+                        Token = AuthSecret.EncryptToken(payload)
+                    }
+                };
+            });
         }
 
         [HttpPost("auth")]
-        public async Task<CustomToken> Post([FromBody] UserCredentials cred)
+        public async Task<PuzzleResponse<CustomToken>> Post([FromBody] UserCredentials cred)
         {
             IsUserInSystemArgs args = new IsUserInSystemArgs {UserName = cred.Username, UserPass = cred.Password};
-            var userRow = _context.ExecuteProc("pr_IsUserInSystem", args)["Table"][0];
-            ClientDetail cd = await _context.ClientDetails.FindAsync(userRow["UserId"]);
+            var userTable = _context.ExecuteProc<IsUserInSystemTable>("pr_IsUserInSystem", args);
+            if (userTable.Response == null)
+            {
+                return new PuzzleResponse<CustomToken>()
+                {
+                    ErrorCode =  userTable.ErrorCode,
+                    ErrorMessage = userTable.ErrorMessage
+                };
+            }
+            var userRow = userTable.Response.First();
+            ClientDetail cd = await _context.ClientDetails.FindAsync(userRow.UserId);
             if (cd == null)
                 return null;
-            DateTime expiration = DateTime.Now.Add(TimeSpan.FromMinutes(_configuration.GetValue<int>("ApiSettings:MinutesToTokenExpiration")));
+            DateTime expiration =
+                DateTime.Now.Add(
+                    TimeSpan.FromMinutes(_configuration.GetValue<int>("ApiSettings:MinutesToTokenExpiration")));
             var authPayload = new AuthPayload()
             {
                 Expiration = expiration,
@@ -88,7 +107,7 @@ namespace PuzzlesoftApi.Controllers
                 MFAMethod = cred.AuthMethod
             };
             var token = AuthSecret.EncryptToken(authPayload);
-            SetupCode setupCode = null; 
+            SetupCode setupCode = null;
             if (cred.AuthMethod == AuthMethods.GoogleAuth)
             {
                 setupCode = new TwoFactorAuthenticator().GenerateSetupCode("פאזלסופט", cd.NameView,
@@ -99,55 +118,70 @@ namespace PuzzlesoftApi.Controllers
                 var code = _totl.CreateTotl(cd.Id.ToString());
                 var phoneNumber = cd.GetPhoneNumber();
                 if (phoneNumber == null)
-                    Helper.ReturnError(ServerErrors.PhoneNumberDoesNotExists);
+                    return Helper.ReturnError<CustomToken>(ServerErrors.PhoneNumberDoesNotExists);
                 if (!new Regex(@"^(?:\+972|0)5\d\-?\d{7}$").IsMatch(phoneNumber))
-                    Helper.ReturnError(ServerErrors.InvalidPhoneNumber);
+                    return Helper.ReturnError<CustomToken>(ServerErrors.InvalidPhoneNumber);
                 var s = await SmsService.SendSms(phoneNumber,
                     string.Format(_configuration.GetValue<string>("ApiSettings:SmsMessage"), code));
                 _logger.LogDebug(s);
             }
 
-            return new CustomToken()
+            return new PuzzleResponse<CustomToken>
             {
-                Token = token,
-                Expiration = expiration,
-                QRCodeUrl = setupCode?.QrCodeSetupImageUrl,
-                UserDetails = userRow
+                Response = new CustomToken
+                {
+                    Token = token,
+                    Expiration = expiration,
+                    QRCodeUrl = setupCode?.QrCodeSetupImageUrl,
+                    UserDetails = userRow
+                }
             };
         }
 
         [Authorize]
         [HttpPost("ret_data_to_client_to_shikum")]
-        public Dictionary<string,List<Dictionary<string, object>>> RetDataToClientToShikum([FromBody]RetDataToClientToShikumArgs args)
+        public PuzzleResponse<PuzzleDataset<
+            RetDataToClientToShikumTable1, 
+            RetDataToClientToShikumTable2, 
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3, 
+            RetDataToClientToShikumTable4
+        >> RetDataToClientToShikum([FromBody]RetDataToClientToShikumArgs args)
         {
-            return _context.ExecuteProc("pr_RetDataToClientToShikum", args, User);
+            return 
+                _context.ExecuteProc
+                <RetDataToClientToShikumTable1,
+                RetDataToClientToShikumTable2,
+                RetDataToClientToShikumTable3,
+                RetDataToClientToShikumTable3,
+                RetDataToClientToShikumTable3,
+                RetDataToClientToShikumTable3,
+                RetDataToClientToShikumTable3,
+                RetDataToClientToShikumTable3,
+                RetDataToClientToShikumTable3,
+                RetDataToClientToShikumTable3,
+                RetDataToClientToShikumTable4>
+                    ("pr_RetDataToClientToShikum", args, User);
         }
 
         [Authorize]
         [HttpPost("add_rep_to_follow")]
-        public object AddRepToFollow([FromBody]AddRepToFollowArgs args)
+        public PuzzleResponse<string> AddRepToFollow([FromBody]AddRepToFollowArgs args)
         {
-            return _context.ExecuteProcAndGetValue("pr_AddRepToFollow", args, User);
+            return _context.ExecuteProc("pr_AddRepToFollow", args, User);
         }
         
         [Authorize]
         [HttpDelete("del_rep_to_follow")]
-        public object DelRepToFollow([FromBody]DelRepToFollowArgs args)
+        public PuzzleResponse<string> DelRepToFollow([FromBody]DelRepToFollowArgs args)
         {
-            return _context.ExecuteProcAndGetValue("pr_DelRepToFollow", args, User);
-        }
-        
-        [HttpGet("test")]
-        public object Test()
-        {
-            throw new PuzzlesoftGlobalError
-            {
-                Data =
-                {
-                    {"error_code", "123"},
-                    {"error_message", "this is a test message"}
-                }
-            };
+            return _context.ExecuteProc("pr_DelRepToFollow", args, User);
         }
 
         [HttpGet("resend")]
@@ -162,34 +196,5 @@ namespace PuzzlesoftApi.Controllers
             _logger.LogDebug(s);
         }
 
-        public class IsUserInSystemArgs
-        {
-            public string UserName { get; set; }
-            public string UserPass { get; set; }
-        }
-        public class RetDataToClientToShikumArgs
-        {
-            public string Idcard { get; set; }
-            [UserId]
-            public int UserId { get; set; }
-        }
-        public class AddRepToFollowArgs     
-        {
-            public int ClientID { get; set; }
-            public string Date1 { get; set; }
-            public string Time1 { get; set; }
-            public string Val1 { get; set; }
-            public string Comments { get; set; }
-            public int[]  SubjectID { get; set; }
-            [UserId]
-            public int UserId { get; set; }
-        }
-
-        public class DelRepToFollowArgs
-        {
-            public int ID { get; set; }
-            [UserId]
-            public int UserId { get; set; }
-        }
     }
 }
