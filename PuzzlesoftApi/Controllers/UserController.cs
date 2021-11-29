@@ -43,11 +43,11 @@ namespace PuzzlesoftApi.Controllers
         }
 
         [HttpPost("mfaverify")]
-        public async Task<PuzzleResponse<CustomToken>> MFAPost([FromBody] string code)
+        public async Task<PuzzleResponse<CustomToken>> MFAPost([FromHeader(Name="Authorization")]string token,[FromBody] string code)
         {
             return await Task.Run(() =>
             {
-                AuthPayload payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
+                AuthPayload payload = AuthSecret.DecryptToken(token);
                 if (payload.Expiration < DateTime.Now)
                     return null;
                 bool hasSucceeded;
@@ -173,9 +173,9 @@ namespace PuzzlesoftApi.Controllers
         }
 
         [HttpGet("resend")]
-        async public Task Resend()
+        async public Task Resend([FromHeader(Name="Authorization")]string token)
         {
-            var payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
+            var payload = AuthSecret.DecryptToken(token);
             var cd = _context.ClientDetails.Find(payload.UserId);
             var code = _totl.CreateTotl(cd.Id.ToString());
 

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using PuzzlesoftApi.Auth;
 using PuzzlesoftApi.Middleware;
 using PuzzlesoftApi.Model;
@@ -55,7 +56,18 @@ namespace PuzzlesoftApi
                 options.Filters.Add(new ElmahFilter());
                 options.OnPermissionCheck = (_) => true;
             });
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("Basic", new OpenApiSecurityScheme()
+                {
+                    Description = "access token",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Scheme = "basic",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                options.OperationFilter<SwaggerAuthFilter>();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

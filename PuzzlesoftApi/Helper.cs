@@ -6,14 +6,20 @@ using System.Data.Common;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ElmahCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using PuzzlesoftApi.Model;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace PuzzlesoftApi
 {
@@ -157,7 +163,7 @@ namespace PuzzlesoftApi
             }
             else
             {
-                foreach (var property in args.GetType().GetProperties())
+                foreach (var property in args.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
                     if (property.PropertyType.IsArray)
                     {
@@ -224,6 +230,44 @@ namespace PuzzlesoftApi
         {
             if (args.Exception is PuzzlesoftGlobalError)
                 args.Dismiss();
+        }
+    }
+
+    public class SwaggerAuthFilter : IOperationFilter
+    {
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        {
+            var attributes = context.MethodInfo.DeclaringType.GetCustomAttributes(true)
+                .Union(context.MethodInfo.GetCustomAttributes(true))
+                .OfType<AuthorizeAttribute>();
+
+            if (attributes == null || attributes.Count() == 0)
+                return;
+            var attr = attributes.ToList()[0];
+
+            IList<string> securityInfos = new List<string>();
+            securityInfos.Add($"{nameof(AuthorizeAttribute.Policy)}:{attr.Policy}");
+            securityInfos.Add($"{nameof(AuthorizeAttribute.Roles)}:{attr.Roles}");
+            securityInfos.Add($"{nameof(AuthorizeAttribute.AuthenticationSchemes)}:{attr.AuthenticationSchemes}");
+            
+            operation.Security = new List<OpenApiSecurityRequirement>()
+            {
+                new OpenApiSecurityRequirement()
+                {
+                    {new OpenApiSecurityScheme()
+                    {
+                        Reference = new OpenApiReference()
+                        {
+                            Id = "Basic",
+                            Type = ReferenceType.SecurityScheme
+                        }
+                    },securityInfos} 
+                }
+            };
+            operation.Responses["401"] = new OpenApiResponse()
+            {
+                Description = "Unauthorized"
+            };
         }
     }
 }

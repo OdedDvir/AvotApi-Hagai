@@ -63,7 +63,7 @@ namespace PuzzlesoftApi
     {
         public int ID { get; set; }
         [UserId]
-        public int UserId { get; set; }
+        private int UserId { get; set; }
     }
 
     public class PuzzleResponse<T>
