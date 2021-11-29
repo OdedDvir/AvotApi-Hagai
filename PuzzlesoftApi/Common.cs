@@ -11,6 +11,8 @@ namespace PuzzlesoftApi
     {
         public const string _TokenExpired = "token expired";
         public const string _MFANotValid = "authentication process was not completed by the user";
+        public const string _UserLoggedOut = "user has logged out";
+        public const string Unauthorized = "הגישה נדחתה, ההתחברות לא הושלמה, או שפג תוקפה";
         public const string PhoneDoesNotExists =
             "לא נמצא מספר טלפון נייד לשליחת קוד התחברות חד פעמי. אנא פנה למערכות מידע של הארגון";
 
@@ -22,7 +24,8 @@ namespace PuzzlesoftApi
     {
         InvalidMfaCode = 300,
         InvalidPhoneNumber,
-        PhoneNumberDoesNotExists
+        PhoneNumberDoesNotExists,
+        AuthenticationFailed
     }
     public static class Errors
     {
@@ -42,7 +45,7 @@ namespace PuzzlesoftApi
     {
         public string Idcard { get; set; }
         [UserId]
-        public int UserId { get; set; }
+        private int UserId { get; set; }
     }
     public class AddRepToFollowArgs     
     {
@@ -53,7 +56,7 @@ namespace PuzzlesoftApi
         public string Comments { get; set; }
         public int[]  SubjectID { get; set; }
         [UserId]
-        public int UserId { get; set; }
+        private int UserId { get; set; }
     }
 
     public class DelRepToFollowArgs
@@ -153,5 +156,55 @@ namespace PuzzlesoftApi
         public int Kod1 { get; set; }
         public int OrderID { get; set; }
         public int Val1 { get; set; }
+    }
+
+    public class RetDataToClientToShikum
+    {
+        public List<RetDataToClientToShikumTable1> Table { get; set; }
+        public List<RetDataToClientToShikumTable2> Table1 { get; set; }
+        public List<RetDataToClientToShikumTable3> Table2 { get; set; }
+        public List<RetDataToClientToShikumTable3> Table3 { get; set; }
+        public List<RetDataToClientToShikumTable3> Table4 { get; set; }
+        public List<RetDataToClientToShikumTable3> Table5 { get; set; }
+        public List<RetDataToClientToShikumTable3> Table6 { get; set; }
+        public List<RetDataToClientToShikumTable3> Table7 { get; set; }
+        public List<RetDataToClientToShikumTable3> Table8 { get; set; }
+        public List<RetDataToClientToShikumTable3> Table9 { get; set; }
+        public List<RetDataToClientToShikumTable4> Table10 { get; set; }
+
+        public static PuzzleResponse<RetDataToClientToShikum> Convert(PuzzleResponse<PuzzleDataset<
+            RetDataToClientToShikumTable1,
+            RetDataToClientToShikumTable2,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable3,
+            RetDataToClientToShikumTable4
+        >> src)
+        {
+            return new PuzzleResponse<RetDataToClientToShikum>()
+            {
+                ErrorMessage = src.ErrorMessage,
+                ErrorCode = src.ErrorCode,
+                Response = new RetDataToClientToShikum()
+                {
+                    Table = src.Response.Table,
+                    Table1 = src.Response.Table1,
+                    Table2 = src.Response.Table2,
+                    Table3 = src.Response.Table3,
+                    Table4 = src.Response.Table4,
+                    Table5 = src.Response.Table5,
+                    Table6 = src.Response.Table6,
+                    Table7 = src.Response.Table7,
+                    Table8 = src.Response.Table8,
+                    Table9 = src.Response.Table9,
+                    Table10 = src.Response.Table10,
+                }
+            };
+        }
     }
 }

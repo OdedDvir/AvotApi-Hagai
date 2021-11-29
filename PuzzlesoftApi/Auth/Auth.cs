@@ -11,11 +11,13 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using PuzzlesoftApi.Model;
+using PuzzlesoftApi.Services;
 using Task = System.Threading.Tasks.Task;
 using JsonProp = Newtonsoft.Json.JsonPropertyAttribute; 
 
@@ -35,21 +37,31 @@ namespace PuzzlesoftApi.Auth
         }
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            string token = Request.Headers["Authorization"];
             AuthPayload payload = null;
+            Func<string, Task<AuthenticateResult>> Fail = async (_message) =>
+            {
+                await Response.WriteAsJsonAsync(new Dictionary<string, string>()
+                {
+                    {"error_code", ServerErrors.AuthenticationFailed.ToString()},
+                    {"error_message", Messages.Unauthorized},
+                    {"extra", _message}
+                });
+                return AuthenticateResult.Fail(_message);
+            };
             try
             {
-                if (string.IsNullOrWhiteSpace(Request.Headers["Authorization"]))
+                if (string.IsNullOrWhiteSpace(token))
                     return Task.FromResult<AuthenticateResult>(null);
-                payload = AuthSecret.DecryptToken(Request.Headers["Authorization"]);
+                payload = AuthSecret.DecryptToken(token);
                 if (payload.Expiration < DateTime.Now)
-                    return Task.FromResult(AuthenticateResult.Fail(Messages._TokenExpired));
+                    return Fail(Messages._TokenExpired);
                 if (!payload.hasMFAEnabled)
-                    return Task.FromResult(
-                        AuthenticateResult.Fail(Messages._MFANotValid));
+                    return Fail(Messages._MFANotValid);
             }
             catch (Exception e)
             {
-                return Task.FromResult(AuthenticateResult.Fail(e));
+                return Fail(e.ToString());
             }
 
             var claims = new[]

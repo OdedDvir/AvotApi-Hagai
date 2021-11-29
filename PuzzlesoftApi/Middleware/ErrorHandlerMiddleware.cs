@@ -40,15 +40,15 @@ namespace PuzzlesoftApi.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Path.Value.Contains("elmah"))
+            if (context.Request.Path.Value.Contains("elmah") || context.Request.Path.Value.Contains("swagger"))
             {
                 await _next(context);
                 return;
             }
             var bodyStream = context.Response.Body;
-            context.Response.ContentType = "application/json";
             try
             {
+                context.Response.ContentType = "application/json";
                 string json;
                 using (var mem = new MemoryStream())
                 {

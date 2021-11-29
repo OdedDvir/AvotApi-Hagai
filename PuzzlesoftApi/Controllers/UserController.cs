@@ -140,22 +140,10 @@ namespace PuzzlesoftApi.Controllers
 
         [Authorize]
         [HttpPost("ret_data_to_client_to_shikum")]
-        public PuzzleResponse<PuzzleDataset<
-            RetDataToClientToShikumTable1, 
-            RetDataToClientToShikumTable2, 
-            RetDataToClientToShikumTable3,
-            RetDataToClientToShikumTable3,
-            RetDataToClientToShikumTable3,
-            RetDataToClientToShikumTable3,
-            RetDataToClientToShikumTable3,
-            RetDataToClientToShikumTable3,
-            RetDataToClientToShikumTable3,
-            RetDataToClientToShikumTable3, 
-            RetDataToClientToShikumTable4
-        >> RetDataToClientToShikum([FromBody]RetDataToClientToShikumArgs args)
+        public PuzzleResponse<RetDataToClientToShikum> RetDataToClientToShikum([FromBody]RetDataToClientToShikumArgs args)
         {
             return 
-                _context.ExecuteProc
+                PuzzlesoftApi.RetDataToClientToShikum.Convert(_context.ExecuteProc
                 <RetDataToClientToShikumTable1,
                 RetDataToClientToShikumTable2,
                 RetDataToClientToShikumTable3,
@@ -167,7 +155,7 @@ namespace PuzzlesoftApi.Controllers
                 RetDataToClientToShikumTable3,
                 RetDataToClientToShikumTable3,
                 RetDataToClientToShikumTable4>
-                    ("pr_RetDataToClientToShikum", args, User);
+                    ("pr_RetDataToClientToShikum", args, User));
         }
 
         [Authorize]
