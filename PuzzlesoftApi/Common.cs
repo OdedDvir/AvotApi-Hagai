@@ -25,7 +25,8 @@ namespace PuzzlesoftApi
         InvalidMfaCode = 300,
         InvalidPhoneNumber,
         PhoneNumberDoesNotExists,
-        AuthenticationFailed
+        AuthenticationFailed,
+        UnhandledException
     }
     public static class Errors
     {

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using ElmahCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
@@ -20,6 +21,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using PuzzlesoftApi.Model;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Task = PuzzlesoftApi.Model.Task;
 
 namespace PuzzlesoftApi
 {

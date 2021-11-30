@@ -53,8 +53,6 @@ namespace PuzzlesoftApi
             services.AddElmah<XmlFileErrorLog>(options =>
             {
                 options.LogPath = "~/log";
-                options.Filters.Add(new ElmahFilter());
-                options.OnPermissionCheck = (_) => true;
             });
             services.AddSwaggerGen(options =>
             {
@@ -83,6 +81,7 @@ namespace PuzzlesoftApi
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseElmah();
             app.UseSwaggerUI();
             app.UseSwagger();

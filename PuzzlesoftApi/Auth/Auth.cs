@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -37,6 +38,8 @@ namespace PuzzlesoftApi.Auth
         }
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            if (Context.GetEndpoint()?.Metadata?.GetMetadata<AuthorizeAttribute>() == null)
+                return Task.FromResult(AuthenticateResult.NoResult());
             string token = Request.Headers["Authorization"];
             AuthPayload payload = null;
             Func<string, Task<AuthenticateResult>> Fail = async (_message) =>

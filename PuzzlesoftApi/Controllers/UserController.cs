@@ -49,7 +49,7 @@ namespace PuzzlesoftApi.Controllers
             {
                 AuthPayload payload = AuthSecret.DecryptToken(token);
                 if (payload.Expiration < DateTime.Now)
-                    return null;
+                    return Helper.ReturnError<CustomToken>(ServerErrors.AuthenticationFailed);
                 bool hasSucceeded;
                 if (payload.MFAMethod == AuthMethods.GoogleAuth)
                 {
@@ -84,11 +84,7 @@ namespace PuzzlesoftApi.Controllers
             var userTable = _context.ExecuteProc<IsUserInSystemTable>("pr_IsUserInSystem", args);
             if (userTable.Response == null)
             {
-                return new PuzzleResponse<CustomToken>()
-                {
-                    ErrorCode =  userTable.ErrorCode,
-                    ErrorMessage = userTable.ErrorMessage
-                };
+                return Helper.ReturnError<CustomToken>(ServerErrors.AuthenticationFailed);
             }
             var userRow = userTable.Response.First();
             ClientDetail cd = await _context.ClientDetails.FindAsync(userRow.UserId);
