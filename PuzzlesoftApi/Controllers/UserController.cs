@@ -43,7 +43,7 @@ namespace PuzzlesoftApi.Controllers
         }
 
         [HttpPost("mfaverify")]
-        public async Task<PuzzleResponse<CustomToken>> MFAPost([FromHeader(Name="Authorization")]string token,[FromBody] string code)
+        public async Task<PuzzleResponse<CustomToken>> MFAPost([FromHeader(Name="Authorization")]string token,[FromBody] MFACode code)
         {
             return await Task.Run(() =>
             {
@@ -55,11 +55,11 @@ namespace PuzzlesoftApi.Controllers
                 {
                     hasSucceeded = new TwoFactorAuthenticator().ValidateTwoFactorPIN(
                         AuthSecret.AccountSecret(payload.UserId.ToString()),
-                        code);
+                        code.Code);
                 }
                 else
                 {
-                    hasSucceeded = _totl.CheckTotl(payload.UserId.ToString(), code);
+                    hasSucceeded = _totl.CheckTotl(payload.UserId.ToString(), code.Code);
                 }
 
                 if (!hasSucceeded)
@@ -181,4 +181,5 @@ namespace PuzzlesoftApi.Controllers
         }
 
     }
+
 }

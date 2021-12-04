@@ -208,4 +208,9 @@ namespace PuzzlesoftApi
             };
         }
     }
+    
+    public class MFACode
+    {
+        public string Code { get; set; }
+    }
 }
