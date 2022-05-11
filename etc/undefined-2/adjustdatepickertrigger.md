@@ -1,2 +1,0 @@
-# adjustDatepickerTrigger&#x20;
-

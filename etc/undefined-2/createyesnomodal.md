@@ -1,2 +1,0 @@
-# CreateYesNoModal&#x20;
-
