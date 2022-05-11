@@ -21,7 +21,6 @@ namespace PuzzlesoftApi.UnitTests
             Birthday = DateTime.Now.Subtract(TimeSpan.FromDays(365 * 25)),
             Childs = 0,
             City = "Tel Aviv",
-            Collectbymiun = false,
             Comments = "none",
             Company = "Puzzlesoft",
             Details = "Some Details",

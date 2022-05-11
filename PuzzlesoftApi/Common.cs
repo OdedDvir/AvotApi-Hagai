@@ -34,7 +34,8 @@ namespace PuzzlesoftApi
         {
             {ServerErrors.InvalidMfaCode, Messages.MfaInvalidCode},
             {ServerErrors.InvalidPhoneNumber, Messages.InvalidPhoneNumber},
-            {ServerErrors.PhoneNumberDoesNotExists, Messages.PhoneDoesNotExists}
+            {ServerErrors.PhoneNumberDoesNotExists, Messages.PhoneDoesNotExists},
+            {ServerErrors.AuthenticationFailed, Messages.Unauthorized}
         };
     }
     public class IsUserInSystemArgs
@@ -161,17 +162,17 @@ namespace PuzzlesoftApi
 
     public class RetDataToClientToShikum
     {
-        public List<RetDataToClientToShikumTable1> Table { get; set; }
-        public List<RetDataToClientToShikumTable2> Table1 { get; set; }
-        public List<RetDataToClientToShikumTable3> Table2 { get; set; }
-        public List<RetDataToClientToShikumTable3> Table3 { get; set; }
-        public List<RetDataToClientToShikumTable3> Table4 { get; set; }
-        public List<RetDataToClientToShikumTable3> Table5 { get; set; }
-        public List<RetDataToClientToShikumTable3> Table6 { get; set; }
-        public List<RetDataToClientToShikumTable3> Table7 { get; set; }
-        public List<RetDataToClientToShikumTable3> Table8 { get; set; }
-        public List<RetDataToClientToShikumTable3> Table9 { get; set; }
-        public List<RetDataToClientToShikumTable4> Table10 { get; set; }
+        public List<RetDataToClientToShikumTable1> Details { get; set; }
+        public List<RetDataToClientToShikumTable2> diagnoses { get; set; }
+        public List<RetDataToClientToShikumTable3> doctor { get; set; }
+        public List<RetDataToClientToShikumTable3> nurse { get; set; }
+        public List<RetDataToClientToShikumTable3> speechTherapy { get; set; }
+        public List<RetDataToClientToShikumTable3> occupationalTherapy { get; set; }
+        public List<RetDataToClientToShikumTable3> socialWork { get; set; }
+        public List<RetDataToClientToShikumTable3> psychology { get; set; }
+        public List<RetDataToClientToShikumTable3> diet { get; set; }
+        public List<RetDataToClientToShikumTable3> physiotherapy { get; set; }
+        public List<RetDataToClientToShikumTable4> subjectsList { get; set; }
 
         public static PuzzleResponse<RetDataToClientToShikum> Convert(PuzzleResponse<PuzzleDataset<
             RetDataToClientToShikumTable1,
@@ -193,17 +194,17 @@ namespace PuzzlesoftApi
                 ErrorCode = src.ErrorCode,
                 Response = new RetDataToClientToShikum()
                 {
-                    Table = src.Response.Table,
-                    Table1 = src.Response.Table1,
-                    Table2 = src.Response.Table2,
-                    Table3 = src.Response.Table3,
-                    Table4 = src.Response.Table4,
-                    Table5 = src.Response.Table5,
-                    Table6 = src.Response.Table6,
-                    Table7 = src.Response.Table7,
-                    Table8 = src.Response.Table8,
-                    Table9 = src.Response.Table9,
-                    Table10 = src.Response.Table10,
+                    Details = src.Response?.Table,
+                    diagnoses = src.Response?.Table1,
+                    doctor = src.Response?.Table2,
+                    nurse = src.Response?.Table3,
+                    speechTherapy = src.Response?.Table4,
+                    occupationalTherapy = src.Response?.Table5,
+                    socialWork = src.Response?.Table6,
+                    psychology = src.Response?.Table7,
+                    diet = src.Response?.Table8,
+                    physiotherapy = src.Response?.Table9,
+                    subjectsList = src.Response?.Table10,
                 }
             };
         }

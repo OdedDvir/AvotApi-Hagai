@@ -46,7 +46,7 @@ namespace PuzzlesoftApi.Auth
             {
                 await Response.WriteAsJsonAsync(new Dictionary<string, string>()
                 {
-                    {"error_code", ServerErrors.AuthenticationFailed.ToString()},
+                    {"error_code", ((int)ServerErrors.AuthenticationFailed).ToString()},
                     {"error_message", Messages.Unauthorized},
                     {"extra", _message}
                 });

@@ -39,13 +39,13 @@ namespace PuzzlesoftApi.Model
         public string Phone3 { get; set; }
         public string Fax { get; set; }
         public string Email { get; set; }
-        public string EmailInbox { get; set; }
-        public string EmailSent { get; set; }
+        /*public string EmailInbox { get; set; }
+        public string EmailSent { get; set; }*/
         public bool? Archive { get; set; }
         public string Password { get; set; }
         public string Comments { get; set; }
         public string Details { get; set; }
-        public string PersonImage { get; set; }
+        /*public string PersonImage { get; set; }
         public short? MainKind { get; set; }
         public string WebSite { get; set; }
         public string Kod { get; set; }
@@ -54,9 +54,9 @@ namespace PuzzlesoftApi.Model
         public bool? HarshahManager { get; set; }
         public short? BankId { get; set; }
         public short? CardKindId { get; set; }
-        public short? PayLimitId { get; set; }
+        public short? PayLimitId { get; set; }*/
         public string Account { get; set; }
-        public string Snif { get; set; }
+        public string Snif { get; set; }/*
         public string CardNum { get; set; }
         public string CardDate { get; set; }
         public int? GoremMafneId { get; set; }
@@ -64,14 +64,14 @@ namespace PuzzlesoftApi.Model
         public int? HachnasaFolder { get; set; }
         public float? PerNikuyMakor { get; set; }
         public DateTime? DateNikuyMakor { get; set; }
-        public int? AverageLateness { get; set; }
+        public int? AverageLateness { get; set; }*/
         public short? Gender { get; set; }
-        public short? FamilyStatus { get; set; }
+        //public short? FamilyStatus { get; set; }
         public short? Childs { get; set; }
-        public string EnglishName { get; set; }
-        public int? UserId { get; set; }
+        //public string EnglishName { get; set; }
+        //public int? UserId { get; set; }
         public DateTime? Birthday { get; set; }
-        public int? BirthCountryId { get; set; }
+        /*public int? BirthCountryId { get; set; }
         public string FatherName { get; set; }
         public short? KupaId { get; set; }
         public short? BituahId { get; set; }
@@ -87,19 +87,19 @@ namespace PuzzlesoftApi.Model
         public string NimanAddress { get; set; }
         public bool? NotCharged { get; set; }
         public int? TnuahId { get; set; }
-        public bool? AutoMirsham { get; set; }
+        public bool? AutoMirsham { get; set; }*/
         public string Harshah { get; set; }
-        public bool? IsUser { get; set; }
+        /*public bool? IsUser { get; set; }
         public int? RoomId { get; set; }
         public short? BedNum { get; set; }
         public string MyListUsers { get; set; }
-        public string DayarPhone { get; set; }
+        public string DayarPhone { get; set; }*/
         public int? Interkum { get; set; }
-        public string SidurPtira { get; set; }
-        public string Tsavah { get; set; }
+        /*public string SidurPtira { get; set; }
+        public string Tsavah { get; set; }*/
         public int? Idnum { get; set; }
         public string Ext { get; set; }
-        public int? KupaSnifId { get; set; }
+        /*public int? KupaSnifId { get; set; }
         public string Properties { get; set; }
         public bool? BSakeret { get; set; }
         public int? RelatedClient { get; set; }
@@ -124,9 +124,9 @@ namespace PuzzlesoftApi.Model
         public string KodHilut { get; set; }
         public bool? IsContactMenShared { get; set; }
         public short? MasavDay { get; set; }
-        public string B2bCity { get; set; }
+        public string B2bCity { get; set; }*/
         public string City { get; set; }
-        public string TransferalComments { get; set; }
+        /*public string TransferalComments { get; set; }
         public DateTime? WorkerJobEnd { get; set; }
         public short? MedicalGroupId { get; set; }
         public string UserPassport { get; set; }
@@ -140,19 +140,19 @@ namespace PuzzlesoftApi.Model
         public string RelatedNameBcountry { get; set; }
         public string ArmyLevel { get; set; }
         public string ArmyId { get; set; }
-        public int? SponserId { get; set; }
+        public int? SponserId { get; set; }*/
         public string Hospital { get; set; }
-        public string LicenseId { get; set; }
+        /*public string LicenseId { get; set; }
         public int? ResponsibleId { get; set; }
         public string MedMemo { get; set; }
         public string MedProp { get; set; }
         public DateTime? WriteLastDate { get; set; }
         public string TransferalAddings { get; set; }
         public int? NConv { get; set; }
-        public short? HospitalTransferId { get; set; }
+        public short? HospitalTransferId { get; set; }*/
         public string WorkerUserName { get; set; }
         public int? UserProfileId { get; set; }
-        public string GuardianName { get; set; }
+        /*public string GuardianName { get; set; }
         public string GuardianField { get; set; }
         public string WorkerRoomId { get; set; }
         public string WorkerRoomJobId { get; set; }
@@ -165,9 +165,9 @@ namespace PuzzlesoftApi.Model
         public int? ShotefDays { get; set; }
         public string Kvura { get; set; }
         public string CurrentStatus { get; set; }
-        public string ClientKod2 { get; set; }
+        public string ClientKod2 { get; set; }*/
         public string Phone4 { get; set; }
-        public bool? BArchiveGroup { get; set; }
+        /*public bool? BArchiveGroup { get; set; }
         public string ElectricityCredit { get; set; }
         public int? ReligionId { get; set; }
         public string MailToHesh { get; set; }
@@ -176,24 +176,24 @@ namespace PuzzlesoftApi.Model
         public short DocFile { get; set; }
         public string ElectricityCreditPrice { get; set; }
         public string WaterCredit { get; set; }
-        public string WaterCreditPrice { get; set; }
-        public bool? Collectbymiun { get; set; }
-        public bool? HeshCollectbymiun { get; set; }
-        public bool? HeshCollectSame { get; set; }
-        public int? HeshCollectBy { get; set; }
-        public int? TypeHeshCollectBy { get; set; }
-        public string EducationF { get; set; }
+        public string WaterCreditPrice { get; set; }*/
+        //public bool? Collectbymiun { get; set; }
+        //public bool? HeshCollectbymiun { get; set; }
+        //public bool? HeshCollectSame { get; set; }
+        //public int? HeshCollectBy { get; set; }
+        //public int? TypeHeshCollectBy { get; set; }
+        /*public string EducationF { get; set; }
         public string YearsOfEducation { get; set; }
         public string SponserKod { get; set; }
         public DateTime? LastUpdatePassword { get; set; }
         public bool BBlockedUser { get; set; }
         public int AtdId { get; set; }
         public bool? BCompany { get; set; }
-        public string PrioId { get; set; }
-        public string PrioId2 { get; set; }
+        //public string PrioId { get; set; }
+        //public string PrioId2 { get; set; }
         public string FnameEng { get; set; }
         public string LnameEng { get; set; }
-        public string IdCardImage { get; set; }
+        public string IdCardImage { get; set; }*/
 
         public virtual ICollection<Appointment> Appointments { get; set; }
         public virtual ICollection<ClientDoc> ClientDocs { get; set; }

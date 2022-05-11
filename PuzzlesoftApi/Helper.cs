@@ -217,7 +217,7 @@ namespace PuzzlesoftApi
                 Headers = { {"SOAPAction", "http://tempuri.org/Send"} }
             };
             var client = new HttpClient();
-            var resp = await client.PostAsync("https://www.019sms.co.il:8090/api", content);
+            var resp = await client.PostAsync("https://019sms.co.il:8090/api", content);
             return await resp.Content.ReadAsStringAsync();
         }
     }

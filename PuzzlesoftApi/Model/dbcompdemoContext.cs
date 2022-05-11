@@ -50,8 +50,8 @@ namespace PuzzlesoftApi.Model
                     adp.Fill(ds);
                     if (ds.Tables.Count > 0 &&
                         ds.Tables[0].Rows.Count > 0 &&
-                        ds.Tables[0].Columns.Contains("errorCode") &&
-                        ds.Tables[0].Columns.Contains("errorMessage"))
+                        ds.Tables[0].Columns["errorCode"] != null &&
+                        ds.Tables[0].Columns["errorMessage"] != null)
                         return new PuzzleResponse<PuzzleDataset<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>()
                         {
                             ErrorCode = ds.Tables[0].Rows[0]["errorCode"].ToString(),
@@ -82,8 +82,8 @@ namespace PuzzlesoftApi.Model
                     adp.Fill(ds);
                     if (ds.Tables.Count > 0 &&
                         ds.Tables[0].Rows.Count > 0 &&
-                        ds.Tables[0].Columns.Contains("errorCode") &&
-                        ds.Tables[0].Columns.Contains("errorMessage"))
+                        ds.Tables[0].Columns["errorCode"] != null &&
+                        ds.Tables[0].Columns["errorMessage"] != null)
                         return new PuzzleResponse<List<T>>()
                         {
                             ErrorCode = ds.Tables[0].Rows[0]["errorCode"].ToString(),
@@ -113,8 +113,8 @@ namespace PuzzlesoftApi.Model
                     adp.Fill(ds);
                     if (ds.Tables.Count > 0 &&
                         ds.Tables[0].Rows.Count > 0 &&
-                        ds.Tables[0].Columns.Contains("errorCode") &&
-                        ds.Tables[0].Columns.Contains("errorMessage"))
+                        ds.Tables[0].Columns["errorCode"] != null &&
+                        ds.Tables[0].Columns["errorMessage"] != null)
                         return new PuzzleResponse<string>()
                         {
                             ErrorCode = ds.Tables[0].Rows[0]["errorCode"].ToString(),
@@ -146,8 +146,8 @@ namespace PuzzlesoftApi.Model
                     adp.Fill(ds);
                     if (ds.Tables.Count > 0 &&
                         ds.Tables[0].Rows.Count > 0 &&
-                        ds.Tables[0].Columns.Contains("errorCode") &&
-                        ds.Tables[0].Columns.Contains("errorMessage"))
+                        ds.Tables[0].Columns["errorCode"] != null &&
+                        ds.Tables[0].Columns["errorMessage"] != null)
                         return new PuzzleResponse<T>()
                         {
                             ErrorCode = ds.Tables[0].Rows[0]["errorCode"].ToString(),
@@ -160,7 +160,7 @@ namespace PuzzlesoftApi.Model
                 }
             }
         }
-
+        /*
         public virtual DbSet<AgafItemsAction> AgafItemsActions { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
         public virtual DbSet<BiAlert> BiAlerts { get; set; }
@@ -178,8 +178,8 @@ namespace PuzzlesoftApi.Model
         public virtual DbSet<BiVtifkudStatus> BiVtifkudStatuses { get; set; }
         public virtual DbSet<Bitan> Bitans { get; set; }
         public virtual DbSet<BusMedah> BusMedahs { get; set; }
-        public virtual DbSet<CheckAppointTime1> CheckAppointTime1s { get; set; }
-        public virtual DbSet<ClientDetail> ClientDetails { get; set; }
+        public virtual DbSet<CheckAppointTime1> CheckAppointTime1s { get; set; }*/
+        public virtual DbSet<ClientDetail> ClientDetails { get; set; }/*
         public virtual DbSet<ClientDetailShort> ClientDetailShorts { get; set; }
         public virtual DbSet<ClientDetails1> ClientDetails1s { get; set; }
         public virtual DbSet<ClientDetails2> ClientDetails2s { get; set; }
@@ -1227,19 +1227,20 @@ namespace PuzzlesoftApi.Model
         public virtual DbSet<XmlTran> XmlTrans { get; set; }
         public virtual DbSet<Yair> Yairs { get; set; }
         public virtual DbSet<pr_RetDataToClientToShikumModel> pr_RetDataToClientToShikumModel { get; set; }
-
+        */
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Password=puzz@support;User ID=puzzlesupport;Initial Catalog=dbcompdemo;Data Source=192.168.85.6;Trust Server Certificate=True;Encrypt=False");
+                //optionsBuilder.UseSqlServer("Password=puzz@support;User ID=puzzlesupport;Initial Catalog=dbcompdemo;Data Source=192.168.85.6;Trust Server Certificate=True;Encrypt=False");
+                optionsBuilder.UseSqlServer("Password=2355#*;User ID=puzzlesoftadmin;Initial Catalog=dbcomp1;Data Source=medicaldb;Trust Server Certificate=True;Encrypt=False");
             }
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Hebrew_CI_AS");
 
+/*
             modelBuilder.Entity<pr_RetDataToClientToShikumModel>(entity => entity.HasNoKey());
             modelBuilder.Entity<AgafItemsAction>(entity =>
             {
@@ -1939,14 +1940,14 @@ namespace PuzzlesoftApi.Model
 
                 entity.Property(e => e.Time2).HasMaxLength(10);
             });
-
+*/
             modelBuilder.Entity<ClientDetail>(entity =>
             {
                 entity.HasKey(e => e.Id)
                     .HasName("aaaaaClientDetails_PK")
                     .IsClustered(false);
 
-                entity.HasIndex(e => e.LocationId, "ClientDetails_LocationID_inc_ID_NameView_Kind2ID_IDCard_Archive_MedicalGroupID_HospitalTransferID_UserProfileID")
+                /*entity.HasIndex(e => e.LocationId, "ClientDetails_LocationID_inc_ID_NameView_Kind2ID_IDCard_Archive_MedicalGroupID_HospitalTransferID_UserProfileID")
                     .HasFillFactor((byte)90);
 
                 entity.HasIndex(e => e.LocationId, "LocationID")
@@ -1954,13 +1955,13 @@ namespace PuzzlesoftApi.Model
 
                 entity.HasIndex(e => e.TnuahId, "TnuahID")
                     .HasFillFactor((byte)90);
-
                 entity.HasIndex(e => e.CurrentStatus, "cur")
                     .HasFillFactor((byte)90);
+                */
 
                 entity.HasIndex(e => e.Id, "id")
                     .HasFillFactor((byte)90);
-
+/*
                 entity.HasIndex(e => e.LocationId, "idx_ClientDetails_LocationID_ID_TnuahID")
                     .HasFillFactor((byte)90);
 
@@ -1969,7 +1970,7 @@ namespace PuzzlesoftApi.Model
 
                 entity.HasIndex(e => new { e.MainKind, e.Archive }, "idx_ClientDetails_MainKind_Archive_inc_ID_NameView_Kind2ID_TnuahID_MedicalGroupID_HospitalTransferID_UserProfileID")
                     .HasFillFactor((byte)90);
-
+*/
                 entity.HasIndex(e => e.Id, "idx_ClientDetails_id")
                     .HasFillFactor((byte)90);
 
@@ -1979,12 +1980,12 @@ namespace PuzzlesoftApi.Model
 
                 entity.Property(e => e.Account).HasMaxLength(20);
 
-                entity.Property(e => e.AliaYear)
+                /*entity.Property(e => e.AliaYear)
                     .HasMaxLength(4)
                     .HasComment("תאריך עליה");
-
+*/
                 entity.Property(e => e.Archive).HasDefaultValueSql("((0))");
-
+/*
                 entity.Property(e => e.ArmyId)
                     .HasMaxLength(12)
                     .HasColumnName("ArmyID");
@@ -2042,12 +2043,12 @@ namespace PuzzlesoftApi.Model
                     .HasColumnName("BirthCountryID")
                     .HasDefaultValueSql("((0))")
                     .HasComment("ארץ לידה");
-
+*/
                 entity.Property(e => e.Birthday)
                     .HasColumnType("datetime")
                     .HasComment("תאריך לידה");
 
-                entity.Property(e => e.BituahId)
+                /*entity.Property(e => e.BituahId)
                     .HasColumnName("BituahID")
                     .HasComment("שם וסוג הביטוח הרפואי");
 
@@ -2076,7 +2077,7 @@ namespace PuzzlesoftApi.Model
                     .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.CardNum).HasMaxLength(50);
-
+*/
                 entity.Property(e => e.Childs)
                     .HasDefaultValueSql("((0))")
                     .HasComment("מס' הילדים");
@@ -2087,15 +2088,15 @@ namespace PuzzlesoftApi.Model
                     .HasColumnName("CityID")
                     .HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ClientKod2).HasMaxLength(30);
+                //entity.Property(e => e.ClientKod2).HasMaxLength(30);
 
-                entity.Property(e => e.Collectbymiun).HasDefaultValueSql("((0))");
+                //entity.Property(e => e.Collectbymiun).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Comments).HasMaxLength(254);
 
                 entity.Property(e => e.Company).HasMaxLength(50);
 
-                entity.Property(e => e.CurrentStatus)
+                /*entity.Property(e => e.CurrentStatus)
                     .IsRequired()
                     .HasMaxLength(20)
                     .HasDefaultValueSql("('')");
@@ -2113,9 +2114,9 @@ namespace PuzzlesoftApi.Model
                 entity.Property(e => e.DayarPhone)
                     .HasMaxLength(10)
                     .HasComment("מס' הטלפון בדירת הדייר");
-
+*/
                 entity.Property(e => e.Details).HasColumnType("ntext");
-
+/*
                 entity.Property(e => e.EducationF).HasDefaultValueSql("('')");
 
                 entity.Property(e => e.ElectricityCredit)
@@ -2127,10 +2128,10 @@ namespace PuzzlesoftApi.Model
                     .IsRequired()
                     .HasMaxLength(20)
                     .HasDefaultValueSql("('')");
-
+*/
                 entity.Property(e => e.Email).HasMaxLength(100);
 
-                entity.Property(e => e.EmailInbox).HasMaxLength(50);
+                /*entity.Property(e => e.EmailInbox).HasMaxLength(50);
 
                 entity.Property(e => e.EmailSent).HasMaxLength(50);
 
@@ -2139,18 +2140,18 @@ namespace PuzzlesoftApi.Model
                     .HasComment("השם הלועזי");
 
                 entity.Property(e => e.ExitForecast).HasColumnType("datetime");
-
+*/
                 entity.Property(e => e.Ext)
                     .HasMaxLength(4)
                     .HasComment("מס' שלוחה מצורף לטל' עבודה");
 
-                entity.Property(e => e.FamilyStatus)
+                /*entity.Property(e => e.FamilyStatus)
                     .HasDefaultValueSql("((0))")
                     .HasComment("0=ללא שיוך,    1-נשוי/אה, 2-רווק/ה, 3-גרוש/ה, 4-אלמנ/ה");
-
                 entity.Property(e => e.FatherName)
                     .HasMaxLength(25)
                     .HasComment("שם האב");
+*/
 
                 entity.Property(e => e.Fax).HasMaxLength(20);
 
@@ -2158,15 +2159,15 @@ namespace PuzzlesoftApi.Model
                     .HasMaxLength(30)
                     .HasColumnName("FName");
 
-                entity.Property(e => e.FnameEng)
+                /*entity.Property(e => e.FnameEng)
                     .IsRequired()
                     .HasDefaultValueSql("('')");
-
+*/
                 entity.Property(e => e.Gender)
                     .HasDefaultValueSql("((0))")
                     .HasComment("0=ללא שיוך,1=זכר,2=נקבה");
 
-                entity.Property(e => e.GoremMafneId)
+                /*entity.Property(e => e.GoremMafneId)
                     .HasColumnName("GoremMafneID")
                     .HasDefaultValueSql("((0))");
 
@@ -2178,26 +2179,26 @@ namespace PuzzlesoftApi.Model
 
                 entity.Property(e => e.GuardianName).HasMaxLength(20);
 
-                entity.Property(e => e.HachnasaFolder).HasComment("תיק מס הכנסה");
+                entity.Property(e => e.HachnasaFolder).HasComment("תיק מס הכנסה");*/
 
                 entity.Property(e => e.Harshah)
                     .HasMaxLength(254)
                     .HasComment("נתוני ההרשאה מחולקים עם ;");
-
+/*
                 entity.Property(e => e.HarshahManager)
                     .HasDefaultValueSql("((0))")
                     .HasComment("הרשאת מנהל-על");
 
-                entity.Property(e => e.HeshCollectSame).HasDefaultValueSql("((0))");
+                //entity.Property(e => e.HeshCollectSame).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.HeshCollectbymiun).HasDefaultValueSql("((0))");
-
+                //entity.Property(e => e.HeshCollectbymiun).HasDefaultValueSql("((0))");
+*/
                 entity.Property(e => e.Hospital).HasMaxLength(50);
 
-                entity.Property(e => e.HospitalTransferId).HasColumnName("HospitalTransferID");
+  /*              entity.Property(e => e.HospitalTransferId).HasColumnName("HospitalTransferID");
 
                 entity.Property(e => e.IdCardImage).HasMaxLength(100);
-
+*/
                 entity.Property(e => e.Idcard)
                     .HasMaxLength(15)
                     .HasColumnName("IDCard");
@@ -2211,7 +2212,7 @@ namespace PuzzlesoftApi.Model
                     .HasDefaultValueSql("((0))")
                     .HasComment("מס' אינטרקום פנימי לחדר הדייר");
 
-                entity.Property(e => e.IsContactMenShared).HasDefaultValueSql("((0))");
+                /*entity.Property(e => e.IsContactMenShared).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.IsMabar)
                     .HasDefaultValueSql("((0))")
@@ -2227,21 +2228,21 @@ namespace PuzzlesoftApi.Model
 
                 entity.Property(e => e.IsUser)
                     .HasDefaultValueSql("((0))")
-                    .HasComment("האם עובד זה הוא משתמש");
+                    .HasComment("האם עובד זה הוא משתמש");*/
 
                 entity.Property(e => e.JobId)
                     .HasColumnName("JobID")
                     .HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.KabalaDate)
+                /*entity.Property(e => e.KabalaDate)
                     .HasColumnType("datetime")
-                    .HasComment("תאריך כניסה ראשונה (קבלת הדייר למחלקה)");
+                    .HasComment("תאריך כניסה ראשונה (קבלת הדייר למחלקה)");*/
 
                 entity.Property(e => e.Kind1Id).HasColumnName("Kind1ID");
 
                 entity.Property(e => e.Kind2Id).HasColumnName("Kind2ID");
 
-                entity.Property(e => e.Kod)
+                /*entity.Property(e => e.Kod)
                     .HasMaxLength(20)
                     .HasComment("קוד החשבון עבור הנה\"ח");
 
@@ -2276,14 +2277,14 @@ namespace PuzzlesoftApi.Model
                 entity.Property(e => e.Languages).HasMaxLength(254);
 
                 entity.Property(e => e.LastUpdatePassword).HasColumnType("datetime");
-
                 entity.Property(e => e.LicenseId).HasMaxLength(50);
+*/
 
                 entity.Property(e => e.Lname)
                     .HasMaxLength(100)
                     .HasColumnName("LName");
 
-                entity.Property(e => e.LnameEng)
+                /*entity.Property(e => e.LnameEng)
                     .IsRequired()
                     .HasDefaultValueSql("('')");
 
@@ -2295,9 +2296,9 @@ namespace PuzzlesoftApi.Model
                     .HasDefaultValueSql("((0))")
                     .HasComment("האם החשבון פטור  ממע\"מ");
 
-                entity.Property(e => e.MailBox).HasMaxLength(20);
+                */entity.Property(e => e.MailBox).HasMaxLength(20);
 
-                entity.Property(e => e.MailToHesh)
+                /*entity.Property(e => e.MailToHesh)
                     .IsRequired()
                     .HasMaxLength(255)
                     .HasDefaultValueSql("('')");
@@ -2322,10 +2323,10 @@ namespace PuzzlesoftApi.Model
                 entity.Property(e => e.MaxAshray)
                     .HasColumnType("money")
                     .HasComment("מקסימום אשראי");
-
+*/
                 entity.Property(e => e.Meaaged).HasMaxLength(50);
 
-                entity.Property(e => e.MedMemo).HasMaxLength(300);
+                /*entity.Property(e => e.MedMemo).HasMaxLength(300);
 
                 entity.Property(e => e.MedProp).HasMaxLength(300);
 
@@ -2340,9 +2341,9 @@ namespace PuzzlesoftApi.Model
                     .HasComment("קוד המשתמשים ששייכו גורם זה לרשימה שלי");
 
                 entity.Property(e => e.NConv).HasColumnName("nConv");
-
+*/
                 entity.Property(e => e.NameView).HasMaxLength(200);
-
+/*
                 entity.Property(e => e.NimanAddress)
                     .HasMaxLength(100)
                     .HasComment("כתובת מלאה");
@@ -2359,13 +2360,13 @@ namespace PuzzlesoftApi.Model
                     .HasColumnName("optNiman")
                     .HasDefaultValueSql("((0))")
                     .HasComment("נמען למכתבים וחשבון, 0- הדייר עצמו, 1-איש הקשר העיקרי");
-
+*/
                 entity.Property(e => e.OsekId)
                     .HasMaxLength(50)
                     .HasColumnName("OsekID");
 
                 entity.Property(e => e.Password).HasMaxLength(20);
-
+/*
                 entity.Property(e => e.PayLimitId)
                     .HasColumnName("PayLimitID")
                     .HasDefaultValueSql("((0))")
@@ -2374,7 +2375,7 @@ namespace PuzzlesoftApi.Model
                 entity.Property(e => e.PerNikuyMakor).HasComment("% ניכוי מס במקור");
 
                 entity.Property(e => e.PersonImage).HasMaxLength(100);
-
+*/
                 entity.Property(e => e.Phone1).HasMaxLength(20);
 
                 entity.Property(e => e.Phone2).HasMaxLength(20);
@@ -2382,7 +2383,7 @@ namespace PuzzlesoftApi.Model
                 entity.Property(e => e.Phone3).HasMaxLength(20);
 
                 entity.Property(e => e.Phone4).HasMaxLength(30);
-
+/*
                 entity.Property(e => e.PriceBack)
                     .HasColumnType("money")
                     .HasDefaultValueSql("((0))");
@@ -2391,7 +2392,7 @@ namespace PuzzlesoftApi.Model
                     .HasColumnType("money")
                     .HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.PrioId)
+                /*entity.Property(e => e.PrioId)
                     .IsRequired()
                     .HasColumnName("prioID")
                     .HasDefaultValueSql("('')");
@@ -2400,7 +2401,7 @@ namespace PuzzlesoftApi.Model
                     .IsRequired()
                     .HasColumnName("prioId2")
                     .HasDefaultValueSql("('')");
-
+                
                 entity.Property(e => e.Properties)
                     .HasColumnType("ntext")
                     .HasComment("מאפייני דייר");
@@ -2439,31 +2440,31 @@ namespace PuzzlesoftApi.Model
                 entity.Property(e => e.SidurPtira)
                     .HasMaxLength(254)
                     .HasComment("סידורי פטירה אצל");
-
+*/
                 entity.Property(e => e.Snif).HasMaxLength(50);
 
                 entity.Property(e => e.SochenId)
                     .HasColumnName("SochenID")
                     .HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.SponserId).HasColumnName("SponserID");
+                /*entity.Property(e => e.SponserId).HasColumnName("SponserID");
 
                 entity.Property(e => e.SponserKod)
                     .IsRequired()
                     .HasDefaultValueSql("('')");
-
+*/
                 entity.Property(e => e.Street).HasMaxLength(100);
-
+/*
                 entity.Property(e => e.TnuahId)
                     .HasColumnName("TnuahID")
                     .HasDefaultValueSql("((0))")
                     .HasComment("ה-ID של התנועה האחרונה של הדייר מטבלת tblClientTnuot");
-
+*/
                 entity.Property(e => e.ToaarId)
                     .HasColumnName("ToaarID")
                     .HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.TransferalAddings).HasMaxLength(200);
+                /*entity.Property(e => e.TransferalAddings).HasMaxLength(200);
 
                 entity.Property(e => e.TransferalComments).HasColumnType("ntext");
 
@@ -2471,23 +2472,22 @@ namespace PuzzlesoftApi.Model
                     .HasMaxLength(254)
                     .HasComment("צוואה אצל");
 
-                entity.Property(e => e.TypeHeshCollectBy).HasColumnName("typeHeshCollectBy");
+                //entity.Property(e => e.TypeHeshCollectBy).HasColumnName("typeHeshCollectBy");
 
                 entity.Property(e => e.UserId)
                     .HasColumnName("UserID")
                     .HasDefaultValueSql("((0))");
-
                 entity.Property(e => e.UserPassport).HasMaxLength(25);
+*/
 
                 entity.Property(e => e.UserProfileId)
                     .HasColumnName("UserProfileID")
                     .HasDefaultValueSql("((0))");
-
+/*
                 entity.Property(e => e.WaterCredit)
                     .IsRequired()
                     .HasMaxLength(20)
                     .HasDefaultValueSql("('')");
-
                 entity.Property(e => e.WaterCreditPrice)
                     .IsRequired()
                     .HasMaxLength(20)
@@ -2517,16 +2517,16 @@ namespace PuzzlesoftApi.Model
                     .HasMaxLength(300)
                     .HasColumnName("WorkerRoomJobID")
                     .HasDefaultValueSql("('')");
-
+*/
                 entity.Property(e => e.WorkerUserName).HasMaxLength(50);
 
-                entity.Property(e => e.WriteLastDate).HasColumnType("datetime");
+                //entity.Property(e => e.WriteLastDate).HasColumnType("datetime");
 
-                entity.Property(e => e.YearsOfEducation).HasMaxLength(2);
+                //entity.Property(e => e.YearsOfEducation).HasMaxLength(2);
 
                 entity.Property(e => e.Zip).HasMaxLength(10);
             });
-
+/*
             modelBuilder.Entity<ClientDetailShort>(entity =>
             {
                 entity.HasNoKey();
@@ -39743,8 +39743,8 @@ namespace PuzzlesoftApi.Model
             });
 
             OnModelCreatingPartial(modelBuilder);
+*/
         }
-
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
         
     }

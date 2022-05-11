@@ -56,7 +56,7 @@ namespace PuzzlesoftApi.Middleware
                 {
                     ErrorCode = ((int)ServerErrors.UnhandledException).ToString(),
                     ErrorMessage = error.Message,
-                    Response = null
+                    Response = error.ToString()
                 });
                 context.RiseError(error);
             }

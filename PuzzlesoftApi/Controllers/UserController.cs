@@ -47,7 +47,15 @@ namespace PuzzlesoftApi.Controllers
         {
             return await Task.Run(() =>
             {
-                AuthPayload payload = AuthSecret.DecryptToken(token);
+                AuthPayload payload;
+                try
+                {
+                    payload = AuthSecret.DecryptToken(token);
+                }
+                catch (Exception)
+                {
+                    return Helper.ReturnError<CustomToken>(ServerErrors.AuthenticationFailed);
+                }
                 if (payload.Expiration < DateTime.Now)
                     return Helper.ReturnError<CustomToken>(ServerErrors.AuthenticationFailed);
                 bool hasSucceeded;
@@ -84,12 +92,17 @@ namespace PuzzlesoftApi.Controllers
             var userTable = _context.ExecuteProc<IsUserInSystemTable>("pr_IsUserInSystem", args);
             if (userTable.Response == null)
             {
-                return Helper.ReturnError<CustomToken>(ServerErrors.AuthenticationFailed);
+                return Helper.ReturnError<CustomToken>(userTable.ErrorCode, userTable.ErrorMessage);
             }
             var userRow = userTable.Response.First();
             ClientDetail cd = await _context.ClientDetails.FindAsync(userRow.UserId);
             if (cd == null)
                 return null;
+            var phoneNumber = cd.GetPhoneNumber();
+            if (phoneNumber == null)
+                return Helper.ReturnError<CustomToken>(ServerErrors.PhoneNumberDoesNotExists);
+            if (!new Regex(@"^(?:\+972|0)5\d\-?\d{7}$").IsMatch(phoneNumber))
+                return Helper.ReturnError<CustomToken>(ServerErrors.InvalidPhoneNumber);
             DateTime expiration =
                 DateTime.Now.Add(
                     TimeSpan.FromMinutes(_configuration.GetValue<int>("ApiSettings:MinutesToTokenExpiration")));
@@ -103,32 +116,13 @@ namespace PuzzlesoftApi.Controllers
                 MFAMethod = cred.AuthMethod
             };
             var token = AuthSecret.EncryptToken(authPayload);
-            SetupCode setupCode = null;
-            if (cred.AuthMethod == AuthMethods.GoogleAuth)
-            {
-                setupCode = new TwoFactorAuthenticator().GenerateSetupCode("פאזלסופט", cd.NameView,
-                    AuthSecret.AccountSecret(cd.Id.ToString()), false);
-            }
-            else
-            {
-                var code = _totl.CreateTotl(cd.Id.ToString());
-                var phoneNumber = cd.GetPhoneNumber();
-                if (phoneNumber == null)
-                    return Helper.ReturnError<CustomToken>(ServerErrors.PhoneNumberDoesNotExists);
-                if (!new Regex(@"^(?:\+972|0)5\d\-?\d{7}$").IsMatch(phoneNumber))
-                    return Helper.ReturnError<CustomToken>(ServerErrors.InvalidPhoneNumber);
-                var s = await SmsService.SendSms(phoneNumber,
-                    string.Format(_configuration.GetValue<string>("ApiSettings:SmsMessage"), code));
-                _logger.LogDebug(s);
-            }
-
             return new PuzzleResponse<CustomToken>
             {
                 Response = new CustomToken
                 {
                     Token = token,
                     Expiration = expiration,
-                    QRCodeUrl = setupCode?.QrCodeSetupImageUrl,
+                    //QRCodeUrl = setupCode?.QrCodeSetupImageUrl,
                     UserDetails = userRow
                 }
             };
@@ -169,15 +163,24 @@ namespace PuzzlesoftApi.Controllers
         }
 
         [HttpGet("resend")]
-        async public Task Resend([FromHeader(Name="Authorization")]string token)
+        public async Task Resend([FromHeader(Name="Authorization")]string token)
         {
             var payload = AuthSecret.DecryptToken(token);
-            var cd = _context.ClientDetails.Find(payload.UserId);
+            var cd = await _context.ClientDetails.FindAsync(payload.UserId);
             var code = _totl.CreateTotl(cd.Id.ToString());
 
             var s = await SmsService.SendSms(cd.GetPhoneNumber(),
                 string.Format(_configuration.GetValue<string>("ApiSettings:SmsMessage"), code));
             _logger.LogDebug(s);
+        }
+        [HttpGet("get_phone")]
+        public async Task<string> getPhone([FromHeader(Name="Authorization")]string token)
+        {
+            var payload = AuthSecret.DecryptToken(token);
+            var cd = await _context.ClientDetails.FindAsync(payload.UserId);
+
+            var phoneNumber = cd.GetPhoneNumber();
+            return phoneNumber;
         }
 
     }
