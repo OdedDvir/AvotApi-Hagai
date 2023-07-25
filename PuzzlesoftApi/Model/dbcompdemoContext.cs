@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
@@ -13,13 +14,12 @@ namespace PuzzlesoftApi.Model
 {
     public partial class dbcompdemoContext : DbContext
     {
-        public dbcompdemoContext()
-        {
-        }
+        private readonly string _connectionString;
 
-        public dbcompdemoContext(DbContextOptions<dbcompdemoContext> options)
+        public dbcompdemoContext(IConfiguration configuration, DbContextOptions<dbcompdemoContext> options)
             : base(options)
         {
+            _connectionString = configuration.GetConnectionString("Default");
         }
 
         public PuzzleResponse<PuzzleDataset<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11>> ExecuteProc<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11>(string proc,
@@ -1233,7 +1233,7 @@ namespace PuzzlesoftApi.Model
             if (!optionsBuilder.IsConfigured)
             {
                 //optionsBuilder.UseSqlServer("Password=puzz@support;User ID=puzzlesupport;Initial Catalog=dbcompdemo;Data Source=192.168.85.6;Trust Server Certificate=True;Encrypt=False");
-                optionsBuilder.UseSqlServer("Password=2355#*;User ID=puzzlesoftadmin;Initial Catalog=dbcomp1;Data Source=medicaldb;Trust Server Certificate=True;Encrypt=False");
+                optionsBuilder.UseSqlServer(_connectionString);
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -33,8 +33,7 @@ namespace PuzzlesoftApi.Controllers
     [Route("[controller]")]
     public class ProdController : ControllerBase
     {
-        public const string BaseApi = "http://172.30.104.41:8090";
-        //public const string BaseApi = "https://localhost:5001";
+        private readonly string _lanApiUrl;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly ITotlService _totl;
@@ -46,15 +45,16 @@ namespace PuzzlesoftApi.Controllers
             _configuration = configuration;
             _totl = totl;
             _logger = logger;
+            _lanApiUrl = configuration.GetSection("LanApiUrl").Value;
         }
 
         private async Task<string> Proxy(HttpMethod method, string uri, string token, object args)
         {
-            var req = new HttpRequestMessage(method, BaseApi + uri);
+            var req = new HttpRequestMessage(method, _lanApiUrl + uri);
             if (args != null)
             {
                 var body = JsonSerializer.Serialize(args);
-                _logger.LogInformation(BaseApi + uri + " => " + body);
+                _logger.LogInformation(_lanApiUrl + uri + " => " + body);
                 req.Content = new StringContent(body, Encoding.UTF8, "application/json");
             }
 
@@ -69,7 +69,7 @@ namespace PuzzlesoftApi.Controllers
             HttpContext.Response.StatusCode = (int)resp.StatusCode;
             HttpContext.Response.Headers.Add(HeaderNames.ContentType, "application/json");
             string content = await resp.Content.ReadAsStringAsync();
-            _logger.LogInformation(BaseApi + uri + " <= " + content);
+            _logger.LogInformation(_lanApiUrl + uri + " <= " + content);
             await HttpContext.Response.WriteAsync(content);
             return content;
         }
@@ -125,7 +125,7 @@ namespace PuzzlesoftApi.Controllers
             _logger.LogInformation("Resp is: " + resp);
             if (response.ErrorCode != "100" || response.Response == null)
                 return;
-            var req = new HttpRequestMessage(HttpMethod.Get, BaseApi + "/user/get_phone");
+            var req = new HttpRequestMessage(HttpMethod.Get, _lanApiUrl + "/user/get_phone");
             req.Headers.TryAddWithoutValidation("Authorization", response.Response?.Token);
             using var client = _httpClientFactory.CreateClient();
             var phoneResp = await client.SendAsync(req);
@@ -167,7 +167,7 @@ namespace PuzzlesoftApi.Controllers
         [HttpGet("resend")]
         public async Task Resend([FromHeader(Name="Authorization")]string token)
         {
-            var req = new HttpRequestMessage(HttpMethod.Get, BaseApi + "/user/get_phone");
+            var req = new HttpRequestMessage(HttpMethod.Get, _lanApiUrl + "/user/get_phone");
             req.Headers.TryAddWithoutValidation("Authorization", token);
             var client = _httpClientFactory.CreateClient();
             var resp = await client.SendAsync(req);

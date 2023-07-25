@@ -33,9 +33,7 @@ namespace PuzzlesoftApi.Controllers
     [Route("[controller]")]
     public class V1Controller : ControllerBase
     {
-        public const string BaseApi = "https://api.bbalev.co.il";
-        //public const string BaseApi = "https://apidmz.bbalev.co.il";
-        //public const string BaseApi = "https://localhost:5001";
+        private readonly string _anotherApiUrl;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly ITotlService _totl;
@@ -45,11 +43,12 @@ namespace PuzzlesoftApi.Controllers
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
             _totl = totl;
+            _anotherApiUrl = configuration.GetSection("AnotherApiUrl").Value;
         }
 
         private async Task<string> Proxy(HttpMethod method, string uri, string token, object args)
         {
-            var req = new HttpRequestMessage(method, BaseApi + uri);
+            var req = new HttpRequestMessage(method, _anotherApiUrl + uri);
             if (args != null)
                 req.Content = new StringContent(JsonSerializer.Serialize(args), Encoding.UTF8, "application/json");
             if (!string.IsNullOrWhiteSpace(token))

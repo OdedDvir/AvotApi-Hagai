@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Dev\Work\Puzzlesoft\Solutions\BaitBalev\BBBabayitApi\puzzlesoft-api\PuzzlesoftApi\bin\Release\netcoreapp5.0\publish\</_PublishTargetUrl>
+    <History>True|2023-07-25T19:50:52.8264154Z;True|2023-07-25T22:50:32.0248236+03:00;True|2023-07-25T22:46:05.6821524+03:00;True|2023-07-24T23:27:56.9273991+03:00;True|2023-07-24T22:04:36.4766711+03:00;True|2023-07-24T21:43:25.3469070+03:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>
