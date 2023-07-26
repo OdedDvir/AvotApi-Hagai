@@ -180,6 +180,12 @@ namespace PuzzlesoftApi.Controllers
             _logger.LogInformation(s);
             await Response.WriteAsync(s);
         }
+        
+        [HttpPost("medical_query")]
+        public async Task MedicalQuery([FromHeader(Name="Authorization")]string token, [FromBody]MedicalQueryParams args)
+        {
+            await Proxy(HttpMethod.Post, "/user/medical_query", token, args);
+        }
 
     }
 

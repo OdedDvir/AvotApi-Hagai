@@ -214,4 +214,32 @@ namespace PuzzlesoftApi
     {
         public string Code { get; set; }
     }
+
+    public class MedicalQueryParams
+    {
+        public int? PatientId { get; set; }
+        public int? RequesterId { get; set; }
+        public int? PerformerId { get; set; }
+        public DateTime StartDateTime { get; set; }
+        public DateTime EndDateTime { get; set; }
+        public string? Status { get; set; }
+    }
+
+    public class MedicalTask
+    {
+        public string Id { get; set; }
+        public DateOnly DueDate { get; set; }
+        public TimeOnly DueTime { get; set; }
+        public DateTime DueDateTime { get; set; }
+        public int PatientId { get; set; }
+        public int RequesterId { get; set; }
+        public int PerformerId { get; set; }
+        public string? TaskTypeId { get; set; }
+        public string? ActorId { get; set; }
+        public string? TaskName { get; set; }
+        public string? TaskDescription { get; set; }
+        public string? Status { get; set; }
+        public string? StatusReason { get; set; }
+        public string? Notes { get; set; }
+    }
 }

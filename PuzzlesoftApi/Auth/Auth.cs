@@ -44,12 +44,12 @@ namespace PuzzlesoftApi.Auth
             AuthPayload payload = null;
             Func<string, Task<AuthenticateResult>> Fail = async (_message) =>
             {
-                await Response.WriteAsJsonAsync(new Dictionary<string, string>()
+                /*await Response.WriteAsJsonAsync(new Dictionary<string, string>()
                 {
                     {"error_code", ((int)ServerErrors.AuthenticationFailed).ToString()},
                     {"error_message", Messages.Unauthorized},
                     {"extra", _message}
-                });
+                });*/
                 return AuthenticateResult.Fail(_message);
             };
             try

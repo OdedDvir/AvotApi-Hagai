@@ -100,6 +100,11 @@ namespace PuzzlesoftApi.Controllers
 
         }
 
+        [HttpPost("medical_query")]
+        public async Task MedicalQuery([FromHeader(Name="Authorization")]string token, [FromBody]MedicalQueryParams args)
+        {
+            await Proxy(HttpMethod.Post, "/prod/medical_query", token, args);
+        }
     }
 
 }

@@ -183,6 +183,12 @@ namespace PuzzlesoftApi.Controllers
             return phoneNumber;
         }
 
+        [Authorize]
+        [HttpPost("medical_query")]
+        public PuzzleResponse<List<MedicalTask>> MedicalQuery([FromBody]MedicalQueryParams args)
+        {
+            return _context.ExecuteProc<MedicalTask>("api.pr_MedicalTask_Query", args, User);
+        }
     }
 
 }
