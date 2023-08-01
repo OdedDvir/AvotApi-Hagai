@@ -4,3 +4,8 @@ PuzzlesoftApi.UnitTests/bin/
 PuzzlesoftApi.UnitTests/obj/
 PuzzlesoftApi/log/
 .idea/.idea.PuzzlesoftApi/.idea/contentModel.xml
+codeium_api_key
+language_server_windows_x64.exe
+language-server.gz
+.idea/
+.vs/
