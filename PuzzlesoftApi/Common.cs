@@ -218,8 +218,8 @@ namespace PuzzlesoftApi
     public class MedicalQueryParams
     {
         public int? PatientId { get; set; }
-        public int? RequesterId { get; set; }
-        public int? PerformerId { get; set; }
+        public int? RequesterCategoryId { get; set; }
+        public int? PerformerCategoryId { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public string? Status { get; set; }
