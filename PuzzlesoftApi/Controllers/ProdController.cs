@@ -186,6 +186,18 @@ namespace PuzzlesoftApi.Controllers
         {
             await Proxy(HttpMethod.Post, "/user/medical_query", token, args);
         }
+        
+        [HttpGet("medical_catalog")]
+        public async Task MedicalCatalog([FromHeader(Name="Authorization")]string token, [FromBody]MedicalCatalogParams args)
+        {
+            await Proxy(HttpMethod.Get, "/user/medical_catalog", token, args);
+        }
+        
+        [HttpPost("medical_create")]
+        public async Task MedicalCreate([FromHeader(Name="Authorization")]string token, [FromBody]MedicalCreateParams args)
+        {
+            await Proxy(HttpMethod.Post, "/user/medical_create", token, args);
+        }
 
     }
 

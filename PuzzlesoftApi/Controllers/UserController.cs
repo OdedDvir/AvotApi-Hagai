@@ -189,6 +189,20 @@ namespace PuzzlesoftApi.Controllers
         {
             return _context.ExecuteProc<MedicalTask>("api.pr_MedicalTask_Query", args, User);
         }
+        [Authorize]
+        [HttpGet("medical_catalog")]
+        public PuzzleResponse<List<MedicalCatalog>> MedicalCatalog([FromQuery]MedicalCatalogParams args)
+        {
+            return _context.ExecuteProc<MedicalCatalog>("api.pr_MedicalTask_Catalog", args, User);
+        }
+        
+        [Authorize]
+        [HttpPost("medical_create")]
+        public IActionResult MedicalCreate([FromBody]MedicalCreateParams args)
+        {
+            _context.ExecuteProc("api.pr_MedicalTask_CreateUsingCatalogId", args, User);
+            return NoContent();
+        }
     }
 
 }

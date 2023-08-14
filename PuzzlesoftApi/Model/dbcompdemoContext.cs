@@ -120,6 +120,8 @@ namespace PuzzlesoftApi.Model
                             ErrorCode = ds.Tables[0].Rows[0]["errorCode"].ToString(),
                             ErrorMessage = ds.Tables[0].Rows[0]["errorMessage"].ToString()
                         };
+                    if (ds.Tables.Count == 0)
+                        return new PuzzleResponse<string>();
                     return new PuzzleResponse<string>
                     {
                         Response = (string) ds.Tables[0].Rows[0][0]

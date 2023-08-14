@@ -1,23 +1,24 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ElmahCore;
 using Newtonsoft.Json;
 
 namespace PuzzlesoftApi
 {
-   
     public static class Messages
     {
         public const string _TokenExpired = "token expired";
         public const string _MFANotValid = "authentication process was not completed by the user";
         public const string _UserLoggedOut = "user has logged out";
         public const string Unauthorized = "הגישה נדחתה, ההתחברות לא הושלמה, או שפג תוקפה";
+
         public const string PhoneDoesNotExists =
             "לא נמצא מספר טלפון נייד לשליחת קוד התחברות חד פעמי. אנא פנה למערכות מידע של הארגון";
 
         public const string MfaInvalidCode = "קוד האימות שגוי/פג תוקף קוד האימות";
-        public const string InvalidPhoneNumber = "מספר הטלפון הקיים במערכות המידע אינו תקין. אנא פנה למערכות מידע של הארגון";
+
+        public const string InvalidPhoneNumber =
+            "מספר הטלפון הקיים במערכות המידע אינו תקין. אנא פנה למערכות מידע של הארגון";
     }
 
     public enum ServerErrors
@@ -28,44 +29,45 @@ namespace PuzzlesoftApi
         AuthenticationFailed,
         UnhandledException
     }
+
     public static class Errors
     {
         public static Dictionary<ServerErrors, string> errors = new Dictionary<ServerErrors, string>()
         {
-            {ServerErrors.InvalidMfaCode, Messages.MfaInvalidCode},
-            {ServerErrors.InvalidPhoneNumber, Messages.InvalidPhoneNumber},
-            {ServerErrors.PhoneNumberDoesNotExists, Messages.PhoneDoesNotExists},
-            {ServerErrors.AuthenticationFailed, Messages.Unauthorized}
+            { ServerErrors.InvalidMfaCode, Messages.MfaInvalidCode },
+            { ServerErrors.InvalidPhoneNumber, Messages.InvalidPhoneNumber },
+            { ServerErrors.PhoneNumberDoesNotExists, Messages.PhoneDoesNotExists },
+            { ServerErrors.AuthenticationFailed, Messages.Unauthorized }
         };
     }
+
     public class IsUserInSystemArgs
     {
         public string UserName { get; set; }
         public string UserPass { get; set; }
     }
+
     public class RetDataToClientToShikumArgs
     {
         public string Idcard { get; set; }
-        [UserId]
-        private int UserId { get; set; }
+        [UserId] private int UserId { get; set; }
     }
-    public class AddRepToFollowArgs     
+
+    public class AddRepToFollowArgs
     {
         public int ClientID { get; set; }
         public string Date1 { get; set; }
         public string Time1 { get; set; }
         public string Val1 { get; set; }
         public string Comments { get; set; }
-        public int[]  SubjectID { get; set; }
-        [UserId]
-        private int UserId { get; set; }
+        public int[] SubjectID { get; set; }
+        [UserId] private int UserId { get; set; }
     }
 
     public class DelRepToFollowArgs
     {
         public int ID { get; set; }
-        [UserId]
-        private int UserId { get; set; }
+        [UserId] private int UserId { get; set; }
     }
 
     public class PuzzleResponse<T>
@@ -75,18 +77,18 @@ namespace PuzzlesoftApi
         [JsonProperty("error_message")] public string ErrorMessage { get; set; } = string.Empty;
     }
 
-    public class PuzzleDataset<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> 
-        where T0: new()
-        where T1: new()
-        where T2: new()
-        where T3: new() 
-        where T4: new() 
-        where T5: new() 
-        where T6: new() 
-        where T7: new() 
-        where T8: new() 
-        where T9: new() 
-        where T10: new()
+    public class PuzzleDataset<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>
+        where T0 : new()
+        where T1 : new()
+        where T2 : new()
+        where T3 : new()
+        where T4 : new()
+        where T5 : new()
+        where T6 : new()
+        where T7 : new()
+        where T8 : new()
+        where T9 : new()
+        where T10 : new()
     {
         public List<T0> Table;
         public List<T1> Table1;
@@ -209,10 +211,27 @@ namespace PuzzlesoftApi
             };
         }
     }
-    
+
     public class MFACode
     {
         public string Code { get; set; }
+    }
+
+    public class MedicalCreateParams
+    {
+        public int PatientId { get; set; }
+        public int EncounterId { get; set; }
+        public int PuzzleTaskCatalogId { get; set; }
+        public DateTime StartDateTime { get; set; }
+        public DateTime EndDateTime { get; set; }
+        public string DaysOfWeekList { get; set; }
+        public string TimesOfDayList { get; set; }
+    }
+
+    public class MedicalCatalogParams
+    {
+        public int? RequesterCategoryId { get; set; }
+        public int? PerformerCategoryId { get; set; }
     }
 
     public class MedicalQueryParams
@@ -223,6 +242,19 @@ namespace PuzzlesoftApi
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public string? Status { get; set; }
+    }
+
+    public class MedicalCatalog
+    {
+        public int Id { get; set; }
+        public string TaskName { get; set; }
+        public int? RequesterCategoryId { get; set; }
+        public int? PerformerCategoryId { get; set; }
+        public string? RequestCategoryName { get; set; }
+        public string? PerformerCategoryName { get; set; }
+        public int? ReportTypeId { get; set; }
+        public int Order { get; set; }
+        public string? Url { get; set; }
     }
 
     public class MedicalTask
